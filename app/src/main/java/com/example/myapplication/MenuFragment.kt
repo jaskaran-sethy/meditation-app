@@ -82,10 +82,6 @@ class MenuFragment : Fragment() {
         val exhaleHoldTimeInMilliseconds: Long = 0
     )
 
-    fun clickListener(cardData: CardData) {
-        openMeditationTimerFragment(cardData)
-    }
-
     private fun openMeditationTimerFragment(cardData: CardData) {
         val action = MenuFragmentDirections.actionMenuFragmentToMeditationTimerFragment(
             cardData.inhaleTimeInMilliseconds,

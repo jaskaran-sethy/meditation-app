@@ -8,22 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.myapplication.databinding.FragmentMeditationBinding
 
 class MeditationTimerFragment : Fragment() {
 
     private var _binding: FragmentMeditationBinding? = null
-    private lateinit var outerTimer: CountDownTimer
     private lateinit var breathTimer: CountDownTimer
-    private val outerDuration: Long = 5 * 60 * 1000 // 5 minutes in milliseconds
-    private val innerDuration: Long = 5500 // 5.5 seconds in milliseconds
+    private val totalBreathsDuration: Long = 5 * 60 * 1000 // 5 minutes in milliseconds
     private lateinit var breathingCircleView: View
 
-    private val initialSize: Int = 300 // initial size of the circle
-    private var maxSize: Int = 500 // max size during inhale
-    private var minSize: Int = 300 // min size during exhale
+    private var maxSize: Int = 0 // max size during inhale
+    private var minSize: Int = 0 // min size during exhale
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -37,17 +33,8 @@ class MeditationTimerFragment : Fragment() {
         _binding = FragmentMeditationBinding.inflate(inflater, container, false)
         breathingCircleView = binding.breathingCircle
         val screenHeight = resources.displayMetrics.heightPixels
-        maxSize = (screenHeight * 0.3).toInt()
-        minSize = (screenHeight * 0.1).toInt()
-        val animator = ValueAnimator.ofInt(0, maxSize)
-        animator.duration = 3000
-        animator.addUpdateListener { animation ->
-            val animatedValue = animation.animatedValue as Int
-            val layoutParams = breathingCircleView.layoutParams as ConstraintLayout.LayoutParams
-            layoutParams.width = animatedValue
-            layoutParams.height = animatedValue
-            breathingCircleView.layoutParams = layoutParams
-        }
+        maxSize = (screenHeight * 0.4).toInt()
+        minSize = (screenHeight * 0.2).toInt()
 
         return binding.root
     }
@@ -98,8 +85,8 @@ class MeditationTimerFragment : Fragment() {
             "Hold Your Breath"
         )
 
-        var breathsRemaining = outerDuration / totalBreathTime
-        binding.breathsRemaining.text = String.format("Breaths remaining: %d", breathsRemaining)
+        var breathsRemaining = totalBreathsDuration / totalBreathTime
+        binding.breathsRemaining.text = String.format("Breaths Remaining: %d", breathsRemaining)
         var currentActionIndex = 0
 
         fun startNextTimer() {
@@ -144,6 +131,22 @@ class MeditationTimerFragment : Fragment() {
                 }
             }
             breathTimer.start()
+        }
+
+        val animator = when (breathActions[currentActionIndex]) {
+            "Inhale" -> ValueAnimator.ofInt(minSize, maxSize)
+            "Exhale" -> ValueAnimator.ofInt(maxSize, minSize)
+            else -> null // No animation for hold
+        }
+        binding.breathingAction.text = breathActions[currentActionIndex]
+
+        animator?.apply {
+            duration = breathTimes[currentActionIndex] + 1000
+            addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Int
+                updateBreathingCircleSize(animatedValue)
+            }
+            start()
         }
 
         startNextTimer()
