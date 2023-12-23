@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HeroFragment">
+    <fragment
+        android:id="@+id/HeroFragment"
+        android:name="com.example.myapplication.HeroFragment"
+        android:label="Hero Fragment"
+        tools:layout="@layout/fragment_hero">
+
+        <action
+            android:id="@+id/action_HeroFragment_To_MenuFragment"
+            app:destination="@id/MenuFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/MenuFragment"
+        android:name="com.example.myapplication.MenuFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_menu">
+
+        <action
+            android:id="@+id/action_MenuFragment_To_MeditationTimerFragment"
+            app:destination="@id/MeditationTimerFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/MeditationTimerFragment"
+        android:name="com.example.myapplication.MeditationTimerFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_meditation">
+
+        <argument
+            android:name="inhaleTimeInMilliseconds"
+            app:argType="long" />
+        <argument
+            android:name="inhaleHoldTimeInMilliseconds"
+            app:argType="long" />
+        <argument
+            android:name="exhaleTimeInMilliseconds"
+            app:argType="long" />
+        <argument
+            android:name="exhaleHoldTimeInMilliseconds"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_MeditationTimerFragment_to_MenuFragment"
+            app:destination="@id/MenuFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
+</navigation>
