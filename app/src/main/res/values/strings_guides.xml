@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Breathing visuals, chosen in Settings (see GuideStyleUi.kt). -->
+    <string name="guide_orb">Orb</string>
+    <string name="guide_orb_description">A soft circle that grows as you breathe in</string>
+    <string name="guide_tide">Tide</string>
+    <string name="guide_tide_description">Water that rises as you breathe in and ebbs as you breathe out</string>
+    <string name="guide_trace">Trace</string>
+    <string name="guide_trace_description">A point of light that traces each breath around a square</string>
+</resources>

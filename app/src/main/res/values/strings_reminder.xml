@@ -1,0 +1,10 @@
+<resources>
+    <string name="reminder_channel_name">Daily reminder</string>
+    <string name="reminder_channel_description">A gentle nudge at the time you choose in Settings.</string>
+    <string name="reminder_title">Time to slow down</string>
+    <string name="reminder_text">Your %1$d-minute %2$s session is ready. Even two minutes helps.</string>
+    <string name="reminder_change_time_text">Is %1$s still a good time? Tap to choose another.</string>
+    <string name="reminder_action_start">Start %1$s · %2$d min</string>
+    <string name="reminder_action_snooze">Remind me in 1 hour</string>
+    <string name="reminder_action_skip">Skip today</string>
+</resources>
