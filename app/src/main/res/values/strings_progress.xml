@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Progress tab. Shows consistency, not performance: no scores, levels or comparisons. -->
+
+    <!-- %1$s is the Monday–Sunday date range, e.g. "6–12 Oct". -->
+    <string name="progress_week_range">This week · %1$s</string>
+
+    <!-- Streak card. The number is shown separately, larger, before this label. -->
+    <plurals name="progress_day_streak_label">
+        <item quantity="one">day streak</item>
+        <item quantity="other">day streak</item>
+    </plurals>
+    <!-- Spoken description of the streak number and its label together. -->
+    <plurals name="progress_streak_description">
+        <item quantity="one">%1$d day streak</item>
+        <item quantity="other">%1$d day streak</item>
+    </plurals>
+    <plurals name="progress_best_streak">
+        <item quantity="one">Best: %1$d day</item>
+        <item quantity="other">Best: %1$d days</item>
+    </plurals>
+
+    <!-- Spoken descriptions for each day of the week row. %1$s is the full weekday name. -->
+    <string name="progress_day_practised">%1$s, practised</string>
+    <string name="progress_day_not_practised">%1$s, not practised</string>
+    <string name="progress_day_today_practised">%1$s, today, practised</string>
+    <string name="progress_day_today_not_yet">%1$s, today, not yet</string>
+
+    <!-- Minutes chart -->
+    <string name="progress_minutes_breathed">Minutes breathed</string>
+    <!-- %1$s is the minutes this week, e.g. "25 min"; %2$d is the number of sessions. -->
+    <plurals name="progress_week_total">
+        <item quantity="one">%1$s · %2$d session</item>
+        <item quantity="other">%1$s · %2$d sessions</item>
+    </plurals>
+    <!-- Spoken description of one bar. %1$s is the full weekday name. -->
+    <plurals name="progress_day_minutes">
+        <item quantity="one">%1$s, %2$d minute</item>
+        <item quantity="other">%1$s, %2$d minutes</item>
+    </plurals>
+    <plurals name="progress_today_minutes">
+        <item quantity="one">%1$s, today, %2$d minute</item>
+        <item quantity="other">%1$s, today, %2$d minutes</item>
+    </plurals>
+
+    <!-- Mood -->
+    <string name="progress_mood_title">How sessions left you</string>
+    <!-- %1$d check-ins answered "Calmer" out of %2$d check-ins this week. -->
+    <plurals name="progress_mood_calmer_summary">
+        <item quantity="one">Calmer %1$d of %2$d time</item>
+        <item quantity="other">Calmer %1$d of %2$d times</item>
+    </plurals>
+    <!-- Shown instead of the Calmer summary when no check-in this week was "Calmer". -->
+    <plurals name="progress_mood_checkins">
+        <item quantity="one">%1$d check-in this week</item>
+        <item quantity="other">%1$d check-ins this week</item>
+    </plurals>
+    <string name="progress_mood_empty">No check-ins yet this week</string>
+    <!-- Spoken description of the mood bar; counts of each answer. -->
+    <string name="progress_mood_breakdown">Calmer: %1$d. The same: %2$d. Still tense: %3$d.</string>
+
+    <!-- Closest badges: the three unearned badges nearest to completion. -->
+    <string name="progress_badges_title">Closest badges</string>
+    <!-- Link to the Badges screen. %1$d badges earned of %2$d in total, e.g. "3 of 8 · See all". -->
+    <string name="progress_badges_see_all">%1$d of %2$d · See all</string>
+    <!-- Spoken description of the link above. -->
+    <string name="progress_badges_see_all_description">%1$d of %2$d badges earned</string>
+    <!-- Accessibility action label for the link; read as "double tap to see all badges". -->
+    <string name="progress_badges_open">see all badges</string>
+    <!-- Shown instead of the badge row once every badge has been earned. -->
+    <string name="progress_badges_all_earned">All eight badges earned</string>
+</resources>

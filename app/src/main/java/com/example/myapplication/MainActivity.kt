@@ -1,53 +1,78 @@
 package com.example.myapplication
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import com.example.myapplication.databinding.ActivityMainBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.core.app.NotificationManagerCompat
+import com.example.myapplication.data.BreathPattern
+import com.example.myapplication.data.BreatheStore
+import com.example.myapplication.reminder.ReminderNotification
+import com.example.myapplication.reminder.ReminderScheduler
+import com.example.myapplication.ui.theme.BreatheTheme
 
-class MainActivity : AppCompatActivity() {
+/** Where the app should open when launched from the reminder notification. */
+sealed interface LaunchRequest {
+    data class StartSession(val pattern: BreathPattern, val minutes: Int) : LaunchRequest
+    data object OpenSettings : LaunchRequest
+}
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
-
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Transparent bars whose icons follow the system light/dark setting, like the app's theme.
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
+        )
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        val store = BreatheStore(applicationContext)
+        // Only act on the launch intent once, not again after a configuration change.
+        val launch = if (savedInstanceState == null) launchRequest(intent) else null
+        if (launch != null) {
+            store.onboardingComplete = true
+            NotificationManagerCompat.from(this).cancel(ReminderNotification.ID)
+        }
+        // Cheap insurance in case the alarm was dropped (e.g. the app was force-stopped).
+        if (store.reminder.enabled) ReminderScheduler.reschedule(this)
 
-        setSupportActionBar(binding.toolbar)
-
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        setContent {
+            BreatheTheme {
+                BreatheApp(store, launch)
+            }
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+    private fun launchRequest(intent: Intent?): LaunchRequest? = when (intent?.action) {
+        ACTION_START_SESSION -> LaunchRequest.StartSession(
+            BreathPattern.fromId(intent.getStringExtra(EXTRA_PATTERN)),
+            intent.getIntExtra(EXTRA_MINUTES, 0).takeIf { it > 0 } ?: BreatheStore(this).lastMinutes
+        )
+        ACTION_OPEN_SETTINGS -> LaunchRequest.OpenSettings
+        else -> null
+    }
+
+    companion object {
+        private const val ACTION_START_SESSION = "com.example.myapplication.START_SESSION"
+        private const val ACTION_OPEN_SETTINGS = "com.example.myapplication.OPEN_SETTINGS"
+        private const val EXTRA_PATTERN = "pattern"
+        private const val EXTRA_MINUTES = "minutes"
+
+        fun startSessionIntent(context: Context, pattern: BreathPattern, minutes: Int): Intent =
+            Intent(context, MainActivity::class.java)
+                .setAction(ACTION_START_SESSION)
+                .putExtra(EXTRA_PATTERN, pattern.id)
+                .putExtra(EXTRA_MINUTES, minutes)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
+        fun openSettingsIntent(context: Context): Intent =
+            Intent(context, MainActivity::class.java)
+                .setAction(ACTION_OPEN_SETTINGS)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
     }
 }

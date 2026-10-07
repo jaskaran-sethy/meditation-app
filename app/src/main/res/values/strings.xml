@@ -1,54 +1,72 @@
 <resources>
-    <string name="app_name">My Application</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-    <string name="hello_world">Hello World</string>
-    <string name="lorem_ipsum">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
-        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
-        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
-        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
-        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
-        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
-        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
-        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
-        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
-        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
-        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
-        bibendum, vel congue leo egestas.\n\n
-        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
-        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
-        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
-        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
-        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
-        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
-        est.\n\n
-        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
-        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
-        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
-        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
-        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
-        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
-        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
-        convallis.\n\n
-        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
-        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
-        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
-        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
-        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
-        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
-        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
-    </string>
-    <string name="toast_button">Toast</string>
-    <string name="card_image">Card Image</string>
-    <string name="default_breath">Default Breath</string>
-    <string name="start">Start</string>
-    <string name="welcome_back">Welcome Back!</string>
-    <string name="horizontal_scroll_for_breath_selection">Horizontal Scroll for Breath Selection</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Breathe</string>
+
+    <!-- Welcome -->
+    <string name="wordmark">BREATHE</string>
+    <string name="welcome_tagline">Guided breathing to help you slow down, one breath at a time.</string>
+    <string name="welcome_session_length">Each session takes about 5 minutes</string>
+    <string name="begin">Begin</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="home_title">How would you like to breathe?</string>
+    <string name="home_begin">Begin %1$s · %2$d min</string>
+    <string name="minutes_short">%1$d min</string>
+    <plurals name="streak_and_week">
+        <item quantity="one">%1$d-day streak · %2$d min this week</item>
+        <item quantity="other">%1$d-day streak · %2$d min this week</item>
+    </plurals>
+    <string name="week_minutes">%1$d min this week</string>
+    <string name="streak_none">Your first session starts a streak</string>
+
+    <!-- Patterns -->
+    <string name="pattern_calm">Calm</string>
+    <string name="pattern_calm_description">Wind down and ease stress</string>
+    <string name="pattern_box">Box</string>
+    <string name="pattern_box_description">Steady focus before a big moment</string>
+    <string name="pattern_balance">Balance</string>
+    <string name="pattern_balance_description">An even, coherent rhythm</string>
+    <string name="pattern_sleep">Sleep</string>
+    <string name="pattern_sleep_description">Long exhales to drift off</string>
+
+    <!-- Tabs -->
+    <string name="tab_breathe">Breathe</string>
+    <string name="tab_progress">Progress</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Session -->
+    <string name="phase_inhale">Breathe in</string>
+    <string name="phase_hold">Hold</string>
+    <string name="phase_exhale">Breathe out</string>
+    <string name="phase_short_in">In %1$d</string>
+    <string name="phase_short_hold">Hold %1$d</string>
+    <string name="phase_short_out">Out %1$d</string>
+    <string name="session_time_left">%1$s left</string>
+    <string name="session_close">End session</string>
+    <string name="session_pause">Pause</string>
+    <string name="session_resume">Resume</string>
+    <string name="sound_on">Turn sound on</string>
+    <string name="sound_off">Turn sound off</string>
+
+    <!-- Complete -->
+    <string name="complete_title">Well done.</string>
+    <string name="complete_subtitle">You gave yourself %1$s quiet minutes.</string>
+    <string name="number_two">two</string>
+    <string name="number_five">five</string>
+    <string name="number_ten">ten</string>
+    <string name="stat_breathed">Breathed</string>
+    <string name="stat_breaths">Breaths</string>
+    <string name="stat_streak">Streak</string>
+    <plurals name="days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <string name="mood_question">How do you feel now?</string>
+    <string name="mood_calmer">Calmer</string>
+    <string name="mood_same">The same</string>
+    <string name="mood_still_tense">Still tense</string>
+    <string name="done">Done</string>
+    <string name="breathe_again">Breathe again</string>
 </resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings tab. The screen title reuses tab_settings; lengths reuse minutes_short. -->
+    <string name="settings_section_session">Session</string>
+    <string name="settings_section_reminders">Reminders</string>
+    <string name="settings_section_accessibility">Accessibility</string>
+
+    <string name="settings_sound">Sound</string>
+    <string name="settings_haptics">Haptics</string>
+    <string name="settings_default_length">Default length</string>
+    <!-- Also the title of its dialog; the options use the guide names from GuideStyleUi. -->
+    <string name="settings_breathing_visual">Breathing visual</string>
+    <string name="settings_daily_reminder">Daily reminder</string>
+    <string name="settings_reminder_time">Time</string>
+    <string name="settings_reminder_days">Days</string>
+    <string name="settings_reduce_motion">Reduce motion</string>
+    <string name="settings_keep_screen_awake">Keep screen awake</string>
+
+    <string name="settings_notifications_denied">Notifications are off for Breathe. You can allow them in system settings.</string>
+
+    <string name="settings_days_every_day">Every day</string>
+    <string name="settings_days_weekdays">Weekdays</string>
+    <string name="settings_days_weekends">Weekends</string>
+    <string name="settings_days_separator">, </string>
+
+    <string name="settings_reduce_motion_system">System</string>
+    <string name="settings_reduce_motion_on">On</string>
+    <string name="settings_reduce_motion_off">Off</string>
+    <string name="settings_reduce_motion_system_on">System (on)</string>
+    <string name="settings_reduce_motion_system_off">System (off)</string>
+    <string name="settings_reduce_motion_description">System follows your device\'s Remove animations setting.</string>
+
+    <!-- Dialogs -->
+    <string name="settings_time_dialog_title">Reminder time</string>
+    <string name="settings_days_dialog_title">Remind me on</string>
+    <string name="settings_days_none">Choose at least one day.</string>
+    <string name="settings_cancel">Cancel</string>
+    <string name="settings_save">Save</string>
+
+    <!-- Footer -->
+    <string name="settings_version">v%1$s</string>
+</resources>

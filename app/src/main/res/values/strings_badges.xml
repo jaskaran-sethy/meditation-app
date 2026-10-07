@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Badges. Calm, plain and honest: badges mark practice that happened, never pressure. -->
+
+    <!-- Badge names -->
+    <string name="badges_name_steady_start">Steady Start</string>
+    <string name="badges_name_unbroken">Unbroken</string>
+    <string name="badges_name_seven_days">Seven Days</string>
+    <string name="badges_name_night_tide">Night Tide</string>
+    <string name="badges_name_four_winds">Four Winds</string>
+    <string name="badges_name_deep_water">Deep Water</string>
+    <string name="badges_name_square_mind">Square Mind</string>
+    <string name="badges_name_mountain">Mountain</string>
+
+    <!-- What each badge takes, as shown in "Next up". -->
+    <string name="badges_requirement_steady_start">Complete 3 full sessions within 7 days.</string>
+    <string name="badges_requirement_unbroken">Finish a 10-minute session without pausing.</string>
+    <string name="badges_requirement_seven_days">Breathe on 7 different days within any 14-day window.</string>
+    <string name="badges_requirement_night_tide">Complete 5 Sleep sessions started after 9 pm.</string>
+    <string name="badges_requirement_four_winds">Complete each of the four patterns 3 times.</string>
+    <string name="badges_requirement_deep_water">Breathe for 100 minutes in full sessions.</string>
+    <string name="badges_requirement_square_mind">Complete 10 full Box breathing sessions.</string>
+    <string name="badges_requirement_mountain">Breathe on 30 different days within 60 days.</string>
+
+    <!-- Badge Earned sheet: one warm sentence naming the practice that earned the badge. -->
+    <string name="badges_message_steady_start">Three full sessions in a single week. A new habit, off the ground.</string>
+    <string name="badges_message_unbroken">Ten minutes, start to finish, without a pause. You stayed with it when it got restless.</string>
+    <string name="badges_message_seven_days">You breathed on 7 different days in under two weeks. That\'s a habit taking root.</string>
+    <string name="badges_message_night_tide">Five Sleep sessions late in the evening. Breathing, right when it helps most.</string>
+    <string name="badges_message_four_winds">Every pattern, three times over. You know which rhythm suits which moment.</string>
+    <string name="badges_message_deep_water">A hundred minutes of full sessions, counted honestly. Time well spent.</string>
+    <string name="badges_message_square_mind">Ten full Box sessions. Real depth in a single technique.</string>
+    <string name="badges_message_mountain">Thirty days of breathing in two months. A lasting habit, built slowly.</string>
+
+    <!-- Status under a badge -->
+    <string name="badges_earned">Earned</string>
+
+    <!-- What is left, e.g. on Progress → Closest badges. -->
+    <plurals name="badges_remaining_sessions">
+        <item quantity="one">%1$d session to go</item>
+        <item quantity="other">%1$d sessions to go</item>
+    </plurals>
+    <plurals name="badges_remaining_days">
+        <item quantity="one">%1$d day to go</item>
+        <item quantity="other">%1$d days to go</item>
+    </plurals>
+    <plurals name="badges_remaining_night_sessions">
+        <item quantity="one">%1$d night to go</item>
+        <item quantity="other">%1$d nights to go</item>
+    </plurals>
+    <plurals name="badges_remaining_patterns">
+        <item quantity="one">%1$d pattern to go</item>
+        <item quantity="other">%1$d patterns to go</item>
+    </plurals>
+    <plurals name="badges_remaining_minutes">
+        <item quantity="one">%1$d min to go</item>
+        <item quantity="other">%1$d min to go</item>
+    </plurals>
+    <plurals name="badges_remaining_box">
+        <item quantity="one">%1$d Box to go</item>
+        <item quantity="other">%1$d Box to go</item>
+    </plurals>
+
+    <!-- Progress so far: %1$d of %2$d (the target). The plural follows the target. -->
+    <plurals name="badges_progress_sessions">
+        <item quantity="one">%1$d of %2$d session</item>
+        <item quantity="other">%1$d of %2$d sessions</item>
+    </plurals>
+    <plurals name="badges_progress_days">
+        <item quantity="one">%1$d of %2$d day</item>
+        <item quantity="other">%1$d of %2$d days</item>
+    </plurals>
+    <plurals name="badges_progress_nights">
+        <item quantity="one">%1$d of %2$d night</item>
+        <item quantity="other">%1$d of %2$d nights</item>
+    </plurals>
+    <plurals name="badges_progress_patterns">
+        <item quantity="one">%1$d of %2$d pattern</item>
+        <item quantity="other">%1$d of %2$d patterns</item>
+    </plurals>
+    <plurals name="badges_progress_minutes">
+        <item quantity="one">%1$d of %2$d min</item>
+        <item quantity="other">%1$d of %2$d min</item>
+    </plurals>
+    <plurals name="badges_progress_box">
+        <item quantity="one">%1$d of %2$d Box</item>
+        <item quantity="other">%1$d of %2$d Box</item>
+    </plurals>
+
+    <!-- Spoken description of a badge tile: name, then status. -->
+    <string name="badges_tile_description">%1$s, %2$s</string>
+    <string name="badges_tile_description_earned">%1$s, earned, %2$s</string>
+    <string name="badges_tile_description_not_started">%1$s, not started, %2$s</string>
+
+    <!-- Badges screen -->
+    <string name="badges_back">Back to Progress</string>
+    <string name="badges_back_label">Progress</string>
+    <string name="badges_title">Badges</string>
+    <!-- %1$d earned of %2$d badges. -->
+    <plurals name="badges_header_summary">
+        <item quantity="one">%1$d of %2$d earned. Each one takes real practice — only full sessions count.</item>
+        <item quantity="other">%1$d of %2$d earned. Each one takes real practice — only full sessions count.</item>
+    </plurals>
+    <string name="badges_next_up">NEXT UP</string>
+    <string name="badges_all_badges">ALL BADGES</string>
+    <string name="badges_all_earned">All eight earned. The practice is yours now — keep breathing for its own sake.</string>
+
+    <!-- "Next up" hints: the one thing left to do. -->
+    <string name="badges_hint_today">Any full session today earns it</string>
+    <string name="badges_hint_tomorrow">Any full session tomorrow earns it</string>
+    <plurals name="badges_hint_more_days">
+        <item quantity="one">%1$d more day with a full session</item>
+        <item quantity="other">%1$d more days with a full session</item>
+    </plurals>
+    <plurals name="badges_hint_steady_start">
+        <item quantity="one">%1$d more full session this week</item>
+        <item quantity="other">%1$d more full sessions this week</item>
+    </plurals>
+    <string name="badges_hint_unbroken">Finish a 10-minute session without pausing</string>
+    <plurals name="badges_hint_night_tide">
+        <item quantity="one">%1$d more Sleep session after 9 pm</item>
+        <item quantity="other">%1$d more Sleep sessions after 9 pm</item>
+    </plurals>
+    <!-- %1$d full sessions of the pattern named %2$s, e.g. "2 more Sleep sessions". -->
+    <plurals name="badges_hint_four_winds_one_pattern">
+        <item quantity="one">%1$d more %2$s session</item>
+        <item quantity="other">%1$d more %2$s sessions</item>
+    </plurals>
+    <plurals name="badges_hint_four_winds">
+        <item quantity="one">%1$d more pattern, 3 times</item>
+        <item quantity="other">%1$d more patterns, 3 times each</item>
+    </plurals>
+    <plurals name="badges_hint_deep_water">
+        <item quantity="one">%1$d more minute in full sessions</item>
+        <item quantity="other">%1$d more minutes in full sessions</item>
+    </plurals>
+    <plurals name="badges_hint_square_mind">
+        <item quantity="one">%1$d more full Box session</item>
+        <item quantity="other">%1$d more full Box sessions</item>
+    </plurals>
+
+    <!-- Badge Earned sheet -->
+    <string name="badges_sheet_eyebrow">BADGE EARNED</string>
+    <!-- Spoken by TalkBack when the sheet appears. -->
+    <string name="badges_sheet_announcement">Badge earned: %1$s</string>
+    <!-- %1$s is the next closest badge's name, %2$s what is left, e.g. "15 min to go". -->
+    <string name="badges_sheet_next">Next: %1$s — %2$s</string>
+    <string name="badges_sheet_continue">Continue</string>
+    <string name="badges_sheet_view_all">View all badges</string>
+    <!-- Proof row values and labels -->
+    <string name="badges_minutes_value">%1$d min</string>
+    <string name="badges_stat_days">Days</string>
+    <string name="badges_stat_breathed">Breathed</string>
+    <string name="badges_stat_full_sessions">Full sessions</string>
+    <string name="badges_stat_length">Length</string>
+    <string name="badges_stat_pauses">Pauses</string>
+    <string name="badges_stat_night_sessions">Night sessions</string>
+    <string name="badges_stat_patterns">Patterns</string>
+    <string name="badges_stat_box_sessions">Box sessions</string>
+    <!-- Spoken description of one proof stat: value then label, e.g. "7 Days". -->
+    <string name="badges_stat_description">%1$s %2$s</string>
+</resources>

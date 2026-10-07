@@ -1,0 +1,11 @@
+Sound cues in res/raw. All are dedicated to the public domain (CC0); no attribution is
+required, but the sources are recorded here.
+
+breath_in.ogg    "intercom in.aiff" by bevibeldesign (Freesound preview, OGG)
+                 https://freesound.org/people/bevibeldesign/sounds/315941/  (Creative Commons 0)
+
+breath_out.ogg   "intercom out.aiff" by bevibeldesign (Freesound preview, OGG)
+                 https://freesound.org/people/bevibeldesign/sounds/315927/  (Creative Commons 0)
+
+session_end.ogg  "Gong or bell vibrant (short).ogg" (Wikimedia Commons, via PDSounds)
+                 https://commons.wikimedia.org/wiki/File:Gong_or_bell_vibrant_(short).ogg  (CC0)

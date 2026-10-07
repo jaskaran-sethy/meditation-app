@@ -1,0 +1,16 @@
+<resources>
+    <string name="share_chooser_title">Share</string>
+    <string name="share_streak_action">Share your streak</string>
+    <string name="share_badge_action">Share this badge</string>
+    <string name="share_badges_action">Share your badges</string>
+    <string name="share_short">Share</string>
+    <plurals name="share_streak_text">
+        <item quantity="one">I breathed today with Breathe, the first day of a new streak.</item>
+        <item quantity="other">I\'ve breathed %1$d days in a row with Breathe.</item>
+    </plurals>
+    <string name="share_badge_text">I earned the %1$s badge in Breathe: %2$s.</string>
+    <plurals name="share_badges_text">
+        <item quantity="one">I\'ve earned %1$d of %2$d breathing badges in Breathe: %3$s.</item>
+        <item quantity="other">I\'ve earned %1$d of %2$d breathing badges in Breathe: %3$s.</item>
+    </plurals>
+</resources>
