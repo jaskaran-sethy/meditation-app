@@ -1,0 +1,27 @@
+<resources>
+    <string name="walkthrough_step">Step %1$d of %2$d</string>
+    <string name="walkthrough_skip">Skip</string>
+    <string name="walkthrough_next">Next</string>
+    <string name="walkthrough_start">Start a %1$d-minute session</string>
+
+    <string name="walkthrough_orb_title">Follow the orb</string>
+    <string name="walkthrough_orb_body">Breathe in as it grows, hold while it rests, and let go as it shrinks. A soft tone and a light tap mark each change, so you can close your eyes.</string>
+    <string name="walkthrough_chip_grows">Grows</string>
+    <string name="walkthrough_chip_holds">Holds</string>
+    <string name="walkthrough_chip_shrinks">Shrinks</string>
+
+    <string name="walkthrough_rhythm_title">Pick a rhythm</string>
+    <string name="walkthrough_rhythm_body">Four patterns for different moments: Calm to wind down, Box to focus, Balance for an even pace, Sleep for long exhales. Choose 2, 5 or 10 minutes.</string>
+    <string name="walkthrough_rhythm_hint">Not sure? Start with Calm.</string>
+
+    <string name="walkthrough_progress_title">Progress you earn</string>
+    <string name="walkthrough_progress_body">Badges come from real practice — full sessions, steady weeks, trying every rhythm. Nothing for just opening the app, and nothing to lose.</string>
+    <string name="walkthrough_medal_earned">Earned</string>
+    <string name="walkthrough_medal_on_the_way">On the way</string>
+    <string name="walkthrough_medal_next">Next</string>
+    <string name="walkthrough_rule_full_sessions">Only full sessions count</string>
+    <string name="walkthrough_rule_nothing_lost">Miss a day? Nothing is lost</string>
+    <string name="walkthrough_rule_see_whats_needed">You always see what\'s needed</string>
+
+    <string name="walkthrough_replay">Replay walkthrough</string>
+</resources>

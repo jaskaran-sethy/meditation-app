@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+import com.example.myapplication.ui.walkthrough.WalkthroughScreen
+import com.example.myapplication.ui.walkthrough.FirstSessionMinutes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -41,6 +43,7 @@ private object Routes {
     const val SESSION = "session/{pattern}/{minutes}"
     const val COMPLETE = "complete/{pattern}/{minutes}/{breaths}?badges={badges}"
     const val BADGES = "badges"
+    const val WALKTHROUGH = "walkthrough"
 
     fun session(pattern: BreathPattern, minutes: Int) = "session/${pattern.id}/$minutes"
     fun complete(pattern: BreathPattern, minutes: Int, breaths: Int, badges: List<Badge>) =
@@ -84,13 +87,17 @@ fun BreatheApp(store: BreatheStore, launch: LaunchRequest? = null) {
         popExitTransition = { fadeOut(tween(fadeMs)) }
     ) {
         composable(Routes.WELCOME) {
-            WelcomeScreen(onBegin = {
-                // First launch goes straight into a 5-minute Calm session; Home comes after.
+            // Begin opens the 3-step walkthrough, which leads into a short first session.
+            WelcomeScreen(onBegin = { navController.navigate(Routes.WALKTHROUGH) })
+        }
+
+        composable(Routes.WALKTHROUGH) {
+            WalkthroughScreen(store = store, onStart = { pattern ->
+                // Shown once: from here on the app opens on Home. Home sits under the session.
                 store.onboardingComplete = true
-                navController.navigate(Routes.MAIN) {
-                    popUpTo(Routes.WELCOME) { inclusive = true }
-                }
-                navController.navigate(Routes.session(BreathPattern.Default, DefaultSessionMinutes))
+                store.lastPattern = pattern
+                navController.navigate(Routes.MAIN) { popUpTo(0) }
+                navController.navigate(Routes.session(pattern, FirstSessionMinutes))
             })
         }
 
@@ -99,7 +106,8 @@ fun BreatheApp(store: BreatheStore, launch: LaunchRequest? = null) {
                 store = store,
                 initialTab = if (launch == LaunchRequest.OpenSettings) MainTab.Settings else MainTab.Breathe,
                 onBegin = { pattern, minutes -> navController.navigate(Routes.session(pattern, minutes)) },
-                onOpenBadges = { navController.navigate(Routes.BADGES) }
+                onOpenBadges = { navController.navigate(Routes.BADGES) },
+                onReplayWalkthrough = { navController.navigate(Routes.WALKTHROUGH) }
             )
         }
 

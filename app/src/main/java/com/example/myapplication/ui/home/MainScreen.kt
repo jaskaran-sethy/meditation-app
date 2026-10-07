@@ -54,6 +54,7 @@ fun MainScreen(
     store: BreatheStore,
     onBegin: (BreathPattern, Int) -> Unit,
     onOpenBadges: () -> Unit,
+    onReplayWalkthrough: () -> Unit,
     initialTab: MainTab = MainTab.Breathe
 ) {
     var tab by rememberSaveable { mutableStateOf(initialTab) }
@@ -71,7 +72,7 @@ fun MainScreen(
                 when (current) {
                     MainTab.Breathe -> HomeTab(store, onBegin)
                     MainTab.Progress -> ProgressTab(store, onOpenBadges)
-                    MainTab.Settings -> SettingsTab(store)
+                    MainTab.Settings -> SettingsTab(store, onReplayWalkthrough)
                 }
             }
             TabBar(selected = tab, onSelect = { tab = it })

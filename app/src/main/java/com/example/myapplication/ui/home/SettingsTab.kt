@@ -116,7 +116,7 @@ private val Weekends = setOf(6, 7)
  * and accessibility. Every change writes straight through to [BreatheStore].
  */
 @Composable
-fun SettingsTab(store: BreatheStore) {
+fun SettingsTab(store: BreatheStore, onReplayWalkthrough: () -> Unit) {
     val context = LocalContext.current
     val locale = currentLocale()
 
@@ -180,6 +180,7 @@ fun SettingsTab(store: BreatheStore) {
         animateToggles = animateToggles,
         onSound = { sound = it; store.soundEnabled = it },
         onHaptics = { haptics = it; store.hapticsEnabled = it },
+        onReplayWalkthrough = onReplayWalkthrough,
         onLength = { dialog = SettingsDialog.Length },
         onGuide = { dialog = SettingsDialog.Guide },
         onReminder = { setReminderEnabled(it) },
@@ -281,7 +282,8 @@ private fun SettingsContent(
     onTime: () -> Unit,
     onDays: () -> Unit,
     onReduceMotion: () -> Unit,
-    onKeepAwake: (Boolean) -> Unit
+    onKeepAwake: (Boolean) -> Unit,
+    onReplayWalkthrough: () -> Unit = {}
 ) {
     val colors = BreatheTheme.colors
     Column(
@@ -385,14 +387,28 @@ private fun SettingsContent(
             )
         }
 
-        // The design also shows "Help & feedback · Privacy" here; those links are pending URLs,
-        // so only the version is shown for now.
-        if (values.version != null) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically
+        // The design also shows "Help & feedback · Privacy" here; those links are pending URLs.
+        // "Replay walkthrough" stands in for the design's Settings → Help entry point.
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .heightIn(min = 48.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .clickable(role = Role.Button, onClick = onReplayWalkthrough)
+                    .padding(horizontal = 8.dp),
+                contentAlignment = Alignment.Center
             ) {
+                Text(
+                    stringResource(R.string.walkthrough_replay),
+                    style = BreatheType.Small,
+                    color = colors.ink60
+                )
+            }
+            if (values.version != null) {
                 Text(
                     stringResource(R.string.settings_version, values.version),
                     style = BreatheType.Small,

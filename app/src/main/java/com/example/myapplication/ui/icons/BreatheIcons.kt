@@ -125,6 +125,24 @@ object BreatheIcons {
         "M15.41 6.51l-6.82 3.98"
     )
 
+    // Walkthrough icons.
+    val Maximize = lucide("maximize-2", "M15 3h6v6", "M9 21H3v-6", "M21 3l-7 7", "M3 21l7-7")
+    val ArrowUpRight = lucide("arrow-up-right", "M7 7h10v10", "M7 17L17 7")
+    val ArrowDownLeft = lucide("arrow-down-left", "M17 7L7 17", "M17 17H7V7")
+    val CircleCheck = lucide("circle-check", circle(12f, 12f, 10f), "M9 12l2 2 4-4")
+    val CalendarRange = lucide(
+        "calendar-range",
+        "M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z",
+        "M16 2v4",
+        "M3 10h18",
+        "M8 2v4",
+        "M17 14h-6",
+        "M13 18H7",
+        "M7 14h.01",
+        "M17 18h.01"
+    )
+    val Eye = lucide("eye", "M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z", circle(12f, 12f, 3f))
+
     private fun circle(cx: Float, cy: Float, r: Float) =
         "M${cx - r} ${cy}a$r $r 0 1 0 ${2 * r} 0a$r $r 0 1 0 ${-2 * r} 0"
 
