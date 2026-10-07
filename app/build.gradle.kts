@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "com.jaskaransethy.breathe"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "com.jaskaransethy.breathe"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
