@@ -76,9 +76,7 @@ fun HomeTab(store: BreatheStore, onBegin: (BreathPattern, Int) -> Unit) {
                 ) {
                     BreathPattern.entries.forEach { option ->
                         PatternCard(
-                            title = stringResource(option.title),
-                            description = stringResource(option.description),
-                            rhythm = option.counts,
+                            pattern = option,
                             selected = option == pattern,
                             onClick = {
                                 pattern = option

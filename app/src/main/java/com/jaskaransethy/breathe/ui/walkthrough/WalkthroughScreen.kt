@@ -325,9 +325,7 @@ private fun RhythmPicker(selected: BreathPattern, onSelect: (BreathPattern) -> U
     ) {
         BreathPattern.entries.forEach { option ->
             PatternCard(
-                title = stringResource(option.title),
-                description = stringResource(option.description),
-                rhythm = option.counts,
+                pattern = option,
                 selected = option == selected,
                 onClick = { onSelect(option) }
             )
