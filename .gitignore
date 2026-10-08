@@ -9,3 +9,8 @@
 .externalNativeBuild/
 .cxx/
 .kotlin/
+
+# Release signing: upload key and its credentials must never be committed.
+/keystore.properties
+*.jks
+*.keystore
