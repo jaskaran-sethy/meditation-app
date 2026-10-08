@@ -54,4 +54,4 @@ date.
 
 ## Contact
 
-Questions about this policy: CONTACT_EMAIL
+Questions about this policy: jase59354@gmail.com
