@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.jaskaransethy.breathe.R
 import com.jaskaransethy.breathe.ui.components.PhotoBackground
 import com.jaskaransethy.breathe.ui.components.PrimaryButton
@@ -64,6 +66,14 @@ fun WelcomeScreen(onBegin: () -> Unit) {
                         shadow = Shadow(colors.scrim(0.7f), Offset(0f, 2f), 12f)
                     ),
                     color = colors.ink,
+                    // Always one line: on narrow phones or large font settings it shrinks to fit.
+                    autoSize = TextAutoSize.StepBased(
+                        minFontSize = 32.sp,
+                        maxFontSize = BreatheType.Wordmark.fontSize,
+                        stepSize = 1.sp
+                    ),
+                    maxLines = 1,
+                    softWrap = false,
                     // Letter spacing trails the last letter; nudge right so the word looks centred.
                     modifier = Modifier
                         .padding(start = 8.dp)
