@@ -14,7 +14,7 @@
 
     <!-- What each badge takes, as shown in "Next up". -->
     <string name="badges_requirement_steady_start">Complete 3 full sessions within 7 days.</string>
-    <string name="badges_requirement_unbroken">Finish a 10-minute session without pausing.</string>
+    <string name="badges_requirement_unbroken">Finish a session of 10 minutes or more without pausing.</string>
     <string name="badges_requirement_seven_days">Breathe on 7 different days within any 14-day window.</string>
     <string name="badges_requirement_night_tide">Complete 5 Sleep sessions started after 9 pm.</string>
     <string name="badges_requirement_four_winds">Complete each of the four patterns 3 times.</string>
@@ -24,7 +24,7 @@
 
     <!-- Badge Earned sheet: one warm sentence naming the practice that earned the badge. -->
     <string name="badges_message_steady_start">Three full sessions in a single week. A new habit, off the ground.</string>
-    <string name="badges_message_unbroken">Ten minutes, start to finish, without a pause. You stayed with it when it got restless.</string>
+    <string name="badges_message_unbroken">Ten minutes or more, start to finish, without a pause. You stayed with it when it got restless.</string>
     <string name="badges_message_seven_days">You breathed on 7 different days in under two weeks. That\'s a habit taking root.</string>
     <string name="badges_message_night_tide">Five Sleep sessions late in the evening. Breathing, right when it helps most.</string>
     <string name="badges_message_four_winds">Every pattern, three times over. You know which rhythm suits which moment.</string>
@@ -116,7 +116,7 @@
         <item quantity="one">%1$d more full session this week</item>
         <item quantity="other">%1$d more full sessions this week</item>
     </plurals>
-    <string name="badges_hint_unbroken">Finish a 10-minute session without pausing</string>
+    <string name="badges_hint_unbroken">Finish a session of 10 minutes or more without pausing</string>
     <plurals name="badges_hint_night_tide">
         <item quantity="one">%1$d more Sleep session after 9 pm</item>
         <item quantity="other">%1$d more Sleep sessions after 9 pm</item>
