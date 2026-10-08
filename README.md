@@ -24,15 +24,15 @@ A calm, offline breathing app for Android, built with Jetpack Compose. Pick a rh
 - **First-open walkthrough** that leads into a 2-minute first session; it can be replayed from Settings.
 - Light and dark themes that follow the system.
 
-All data stays on the device, in `SharedPreferences`. There is no account, network access or analytics.
+All data stays on the device, in `SharedPreferences`. There is no account, network access or analytics. See the [privacy policy](docs/privacy-policy.md).
 
 ## Requirements
 
 - Android Studio (its bundled JDK 17+ works; the build targets Java 17)
-- Android SDK 34
+- Android SDK 36
 - A device or emulator running Android 7.0 (API 24) or later
 
-The Gradle wrapper (Gradle 8.13, AGP 8.2.2, Kotlin 1.9.10) is checked in, so no separate Gradle install is needed.
+The Gradle wrapper (Gradle 8.13, AGP 8.13.2, Kotlin 2.2.21) is checked in, so no separate Gradle install is needed.
 
 ## Building and running
 
@@ -48,6 +48,16 @@ Open the project in Android Studio and run the `app` configuration, or use the c
 
 On Windows, use `gradlew.bat` instead of `./gradlew`.
 
+## Release builds
+
+Release builds are shrunk with R8 and signed with the Google Play upload key. Copy [`keystore.properties.example`](keystore.properties.example) to `keystore.properties`, point it at your keystore and fill in the passwords. Both files stay out of git. Then build the bundle to upload to Play:
+
+```bash
+./gradlew bundleRelease
+```
+
+Without `keystore.properties` the release build is produced unsigned. Answers for the Play Console's policy forms are in [`docs/play-console-answers.md`](docs/play-console-answers.md).
+
 ## Tests
 
 Unit tests cover session timing, practice stats, reminder scheduling and badge rules:
@@ -59,7 +69,7 @@ Unit tests cover session timing, practice stats, reminder scheduling and badge r
 ## Project layout
 
 ```
-app/src/main/java/com/example/myapplication/
+app/src/main/java/com/jaskaransethy/breathe/
 ├── data/         Patterns, session timing, stats, badge rules and the BreatheStore persistence
 ├── reminder/     Reminder alarm scheduling, notification and broadcast receivers
 └── ui/
