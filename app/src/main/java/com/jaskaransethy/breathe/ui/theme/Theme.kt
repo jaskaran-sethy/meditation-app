@@ -9,8 +9,15 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -62,6 +69,12 @@ data class BreatheColorScheme(
     val glass: Color,
     val sheet: Color,
     val tabSelected: Color,
+    /** Soft glow in the top-right corner of the screen background, and its transparent edge. */
+    val glowA: Color,
+    val glowAEdge: Color,
+    /** Soft glow towards the bottom-left of the screen background, and its transparent edge. */
+    val glowB: Color,
+    val glowBEdge: Color,
     /** Base colour of photo scrims: Night in dark mode, a pale morning mist in light mode. */
     private val scrimBase: Color
 ) {
@@ -84,9 +97,32 @@ data class BreatheColorScheme(
 
     /** Photo scrim at the given opacity (the design's $scrim-XX variables). */
     fun scrim(alpha: Float): Color = scrimBase.copy(alpha = alpha)
+}
 
-    /** Full-screen background behind Home, Progress, Settings and Badges. */
-    val background: Brush get() = Brush.verticalGradient(listOf(bgTop, bgBottom))
+/**
+ * Full-screen background behind Home, Progress, Settings, Badges and the walkthrough: the
+ * top-to-bottom gradient with two soft glows laid over it, as in the design.
+ */
+fun Modifier.screenBackground(colors: BreatheColorScheme): Modifier = drawBehind {
+    drawRect(Brush.verticalGradient(listOf(colors.bgTop, colors.bgBottom)))
+    drawGlow(colors.glowA, colors.glowAEdge, centre = Offset(0.92f, 0.06f), extent = Size(1.5f, 0.7f))
+    drawGlow(colors.glowB, colors.glowBEdge, centre = Offset(0.02f, 0.82f), extent = Size(1.4f, 0.6f))
+}
+
+/**
+ * An elliptical radial glow. [centre] and [extent] (the ellipse's width and height) are fractions
+ * of the background's size, matching the design's gradient settings.
+ */
+private fun DrawScope.drawGlow(colour: Color, edge: Color, centre: Offset, extent: Size) {
+    val c = Offset(size.width * centre.x, size.height * centre.y)
+    val radiusX = size.width * extent.width / 2
+    val radiusY = size.height * extent.height / 2
+    clipRect {
+        // A circular gradient stretched sideways into an ellipse.
+        scale(scaleX = radiusX / radiusY, scaleY = 1f, pivot = c) {
+            drawCircle(Brush.radialGradient(listOf(colour, edge), center = c, radius = radiusY), radiusY, c)
+        }
+    }
 }
 
 val DarkBreatheColors = BreatheColorScheme(
@@ -106,6 +142,10 @@ val DarkBreatheColors = BreatheColorScheme(
     glass = Color(0xB30B2A33),
     sheet = Color(0xFF12404B),
     tabSelected = Color(0x24FFFFFF),
+    glowA = Color(0x5C9FD3C7),
+    glowAEdge = Color(0x009FD3C7),
+    glowB = Color(0x8C4A6BA8),
+    glowBEdge = Color(0x003C5C94),
     scrimBase = BreatheColors.Night
 )
 
@@ -126,6 +166,10 @@ val LightBreatheColors = BreatheColorScheme(
     glass = Color(0xD9FFFFFF),
     sheet = Color.White,
     tabSelected = Color(0x140B2A33),
+    glowA = Color(0xCCB9E0D5),
+    glowAEdge = Color(0x00B9E0D5),
+    glowB = Color(0xB3F2D9C2),
+    glowBEdge = Color(0x00F2D9C2),
     scrimBase = BreatheColors.PaleMist
 )
 

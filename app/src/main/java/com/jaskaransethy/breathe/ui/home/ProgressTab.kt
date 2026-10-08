@@ -61,6 +61,7 @@ import com.jaskaransethy.breathe.ui.badges.badgeRemainingText
 import com.jaskaransethy.breathe.ui.icons.BreatheIcons
 import com.jaskaransethy.breathe.ui.theme.BreatheColorScheme
 import com.jaskaransethy.breathe.ui.theme.BreatheTheme
+import com.jaskaransethy.breathe.ui.theme.screenBackground
 import com.jaskaransethy.breathe.ui.theme.BreatheType
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -641,7 +642,7 @@ private val PreviewBadges = listOf(
 @Composable
 private fun ProgressContentPreview() {
     BreatheTheme {
-        Box(Modifier.fillMaxSize().background(BreatheTheme.colors.background)) {
+        Box(Modifier.fillMaxSize().screenBackground(BreatheTheme.colors)) {
             ProgressContent(PreviewProgress, PreviewBadges, onOpenBadges = {})
         }
     }
@@ -651,7 +652,7 @@ private fun ProgressContentPreview() {
 @Composable
 private fun ProgressContentLightPreview() {
     BreatheTheme(darkTheme = false) {
-        Box(Modifier.fillMaxSize().background(BreatheTheme.colors.background)) {
+        Box(Modifier.fillMaxSize().screenBackground(BreatheTheme.colors)) {
             ProgressContent(PreviewProgress, PreviewBadges, onOpenBadges = {})
         }
     }

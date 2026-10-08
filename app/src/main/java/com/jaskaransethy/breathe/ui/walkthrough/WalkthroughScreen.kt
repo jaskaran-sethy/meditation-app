@@ -66,6 +66,7 @@ import com.jaskaransethy.breathe.ui.components.PrimaryButton
 import com.jaskaransethy.breathe.ui.icons.BreatheIcons
 import com.jaskaransethy.breathe.ui.theme.BreatheColors
 import com.jaskaransethy.breathe.ui.theme.BreatheTheme
+import com.jaskaransethy.breathe.ui.theme.screenBackground
 import com.jaskaransethy.breathe.ui.theme.BreatheType
 import kotlin.math.PI
 import kotlin.math.cos
@@ -97,7 +98,7 @@ fun WalkthroughScreen(store: BreatheStore, onStart: (BreathPattern) -> Unit) {
     }
     BackHandler(enabled = pager.currentPage > 0) { goTo(pager.currentPage - 1) }
 
-    Column(Modifier.fillMaxSize().background(colors.background).statusBarsPadding()) {
+    Column(Modifier.fillMaxSize().screenBackground(colors).statusBarsPadding()) {
         TopBar(
             step = pager.currentPage,
             showSkip = pager.currentPage < STEPS - 1,

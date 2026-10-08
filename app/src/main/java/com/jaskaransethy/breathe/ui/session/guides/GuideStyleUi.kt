@@ -1,7 +1,6 @@
 package com.jaskaransethy.breathe.ui.session.guides
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -14,6 +13,7 @@ import com.jaskaransethy.breathe.data.BreathPattern
 import com.jaskaransethy.breathe.data.GuideStyle
 import com.jaskaransethy.breathe.data.Phase
 import com.jaskaransethy.breathe.ui.theme.BreatheTheme
+import com.jaskaransethy.breathe.ui.theme.screenBackground
 import kotlin.math.PI
 import kotlin.math.cos
 
@@ -88,7 +88,7 @@ internal fun GuidePreviewRow(
 ) {
     BreatheTheme(darkTheme = dark) {
         Row(
-            modifier = Modifier.background(BreatheTheme.colors.background).padding(16.dp),
+            modifier = Modifier.screenBackground(BreatheTheme.colors).padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
