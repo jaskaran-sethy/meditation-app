@@ -91,6 +91,7 @@ import com.jaskaransethy.breathe.ui.icons.BreatheIcons
 import com.jaskaransethy.breathe.ui.session.guides.description
 import com.jaskaransethy.breathe.ui.session.guides.label
 import com.jaskaransethy.breathe.ui.theme.BreatheTheme
+import com.jaskaransethy.breathe.ui.theme.screenBackground
 import com.jaskaransethy.breathe.ui.theme.BreatheType
 import java.text.DateFormatSymbols
 import java.util.Calendar
@@ -904,7 +905,7 @@ private fun appVersion(context: Context): String? = try {
 
 @Composable
 private fun SettingsPreviewContent() {
-    Box(Modifier.fillMaxSize().background(BreatheTheme.colors.background)) {
+    Box(Modifier.fillMaxSize().screenBackground(BreatheTheme.colors)) {
         SettingsContent(
             values = SettingsValues(
                 sound = true,

@@ -41,6 +41,7 @@ import com.jaskaransethy.breathe.data.BreatheStore
 import com.jaskaransethy.breathe.data.shouldReduceMotion
 import com.jaskaransethy.breathe.ui.icons.BreatheIcons
 import com.jaskaransethy.breathe.ui.theme.BreatheTheme
+import com.jaskaransethy.breathe.ui.theme.screenBackground
 import com.jaskaransethy.breathe.ui.theme.BreatheType
 
 enum class MainTab(val label: Int, val icon: ImageVector) {
@@ -61,7 +62,7 @@ fun MainScreen(
     val context = LocalContext.current
     val fadeMs = remember { if (shouldReduceMotion(context, store)) 0 else 400 }
 
-    Box(Modifier.fillMaxSize().background(BreatheTheme.colors.background)) {
+    Box(Modifier.fillMaxSize().screenBackground(BreatheTheme.colors)) {
         Column(Modifier.fillMaxSize()) {
             Crossfade(
                 targetState = tab,

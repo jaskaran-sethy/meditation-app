@@ -45,6 +45,7 @@ import com.jaskaransethy.breathe.ui.components.IconCircleButton
 import com.jaskaransethy.breathe.ui.components.Medal
 import com.jaskaransethy.breathe.ui.icons.BreatheIcons
 import com.jaskaransethy.breathe.ui.theme.BreatheTheme
+import com.jaskaransethy.breathe.ui.theme.screenBackground
 import com.jaskaransethy.breathe.ui.theme.BreatheType
 
 private const val GridColumns = 3
@@ -64,7 +65,7 @@ fun BadgesScreen(store: BreatheStore, onBack: () -> Unit) {
 
     BackHandler(onBack = onBack)
 
-    Box(Modifier.fillMaxSize().background(colors.background)) {
+    Box(Modifier.fillMaxSize().screenBackground(colors)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
