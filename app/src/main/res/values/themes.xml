@@ -1,7 +1,7 @@
 <resources>
     <!-- Compose draws every screen; the window theme only sets the launch background (Paper in
          light mode, Night in dark mode) so there is no flash before the first frame. -->
-    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.Breathe" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/window_background</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

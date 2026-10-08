@@ -1,0 +1,136 @@
+package com.jaskaransethy.breathe.ui.home
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.dp
+import com.jaskaransethy.breathe.R
+import com.jaskaransethy.breathe.data.BreathPattern
+import com.jaskaransethy.breathe.data.BreatheStore
+import com.jaskaransethy.breathe.data.PracticeSummary
+import com.jaskaransethy.breathe.data.SessionLengths
+import com.jaskaransethy.breathe.ui.components.LengthControl
+import com.jaskaransethy.breathe.ui.components.PatternCard
+import com.jaskaransethy.breathe.ui.components.PrimaryButton
+import com.jaskaransethy.breathe.ui.icons.BreatheIcons
+import com.jaskaransethy.breathe.ui.theme.BreatheTheme
+import com.jaskaransethy.breathe.ui.theme.BreatheType
+import java.util.Calendar
+
+@Composable
+fun HomeTab(store: BreatheStore, onBegin: (BreathPattern, Int) -> Unit) {
+    // The last choice is pre-selected so returning users can tap Begin straight away.
+    var pattern by remember { mutableStateOf(store.lastPattern) }
+    var minutes by remember { mutableStateOf(store.lastMinutes) }
+    val summary = remember { store.summary() }
+    val patternTitle = stringResource(pattern.title)
+
+    // Fills the screen with the controls pinned to the bottom, but scrolls on short screens
+    // or with large text instead of clipping.
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .heightIn(min = maxHeight)
+                .statusBarsPadding()
+                .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(stringResource(greeting()), style = BreatheType.Small, color = BreatheTheme.colors.ink70)
+                    Text(
+                        stringResource(R.string.home_title),
+                        style = BreatheType.Heading,
+                        color = BreatheTheme.colors.ink,
+                        modifier = Modifier.semantics { heading() }
+                    )
+                }
+                Column(
+                    modifier = Modifier.selectableGroup(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    BreathPattern.entries.forEach { option ->
+                        PatternCard(
+                            pattern = option,
+                            selected = option == pattern,
+                            onClick = {
+                                pattern = option
+                                store.lastPattern = option
+                            }
+                        )
+                    }
+                }
+            }
+
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(top = 28.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                StreakLine(summary)
+                LengthControl(
+                    options = SessionLengths,
+                    selected = minutes,
+                    label = { stringResource(R.string.minutes_short, it) },
+                    onSelect = {
+                        minutes = it
+                        store.lastMinutes = it
+                    }
+                )
+                PrimaryButton(
+                    text = stringResource(R.string.home_begin, patternTitle, minutes),
+                    onClick = { onBegin(pattern, minutes) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun StreakLine(summary: PracticeSummary) {
+    val text = when {
+        summary.streakDays > 0 -> pluralStringResource(
+            R.plurals.streak_and_week, summary.streakDays, summary.streakDays, summary.minutesThisWeek
+        )
+        summary.minutesThisWeek > 0 -> stringResource(R.string.week_minutes, summary.minutesThisWeek)
+        else -> stringResource(R.string.streak_none)
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(BreatheIcons.Leaf, null, Modifier.size(16.dp), tint = BreatheTheme.colors.accent)
+        Text(text, style = BreatheType.Small, color = BreatheTheme.colors.ink80)
+    }
+}
+
+private fun greeting(): Int = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
+    in 5..11 -> R.string.greeting_morning
+    in 12..17 -> R.string.greeting_afternoon
+    else -> R.string.greeting_evening
+}
