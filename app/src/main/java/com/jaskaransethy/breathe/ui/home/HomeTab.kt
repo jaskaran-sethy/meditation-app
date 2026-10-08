@@ -1,12 +1,10 @@
 package com.jaskaransethy.breathe.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -31,85 +29,101 @@ import androidx.compose.ui.unit.dp
 import com.jaskaransethy.breathe.R
 import com.jaskaransethy.breathe.data.BreathPattern
 import com.jaskaransethy.breathe.data.BreatheStore
+import com.jaskaransethy.breathe.data.CustomPattern
+import com.jaskaransethy.breathe.data.PresetPattern
 import com.jaskaransethy.breathe.data.PracticeSummary
+import com.jaskaransethy.breathe.ui.components.CreatePatternCard
 import com.jaskaransethy.breathe.ui.components.LengthControl
 import com.jaskaransethy.breathe.ui.components.PatternCard
 import com.jaskaransethy.breathe.ui.components.PrimaryButton
+import com.jaskaransethy.breathe.ui.components.displayName
+import com.jaskaransethy.breathe.ui.components.fadingBottomEdge
 import com.jaskaransethy.breathe.ui.icons.BreatheIcons
 import com.jaskaransethy.breathe.ui.theme.BreatheTheme
 import com.jaskaransethy.breathe.ui.theme.BreatheType
 import java.util.Calendar
 
 @Composable
-fun HomeTab(store: BreatheStore, onBegin: (BreathPattern, Int) -> Unit) {
+fun HomeTab(
+    store: BreatheStore,
+    onBegin: (BreathPattern, Int) -> Unit,
+    /** Opens the pattern builder: null for a new pattern, or a custom pattern's id to edit it. */
+    onEditPattern: (String?) -> Unit
+) {
     // The last choice is pre-selected so returning users can tap Begin straight away.
     var pattern by remember { mutableStateOf(store.lastPattern) }
     var minutes by remember { mutableStateOf(store.lastMinutes) }
     var lengths by remember { mutableStateOf(store.sessionLengths) }
     var editingLengths by rememberSaveable { mutableStateOf(false) }
+    val customPatterns = remember { store.customPatterns }
     val summary = remember { store.summary() }
-    val patternTitle = stringResource(pattern.title)
+    val patternTitle = pattern.displayName()
 
-    // Fills the screen with the controls pinned to the bottom, but scrolls on short screens
-    // or with large text instead of clipping.
-    BoxWithConstraints(Modifier.fillMaxSize()) {
+    // The controls stay pinned to the bottom so Begin is always in reach; the patterns above
+    // scroll once the user's own patterns (or large text) no longer fit.
+    val scroll = rememberScrollState()
+    Column(Modifier.fillMaxSize().statusBarsPadding()) {
         Column(
             modifier = Modifier
+                .weight(1f)
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .heightIn(min = maxHeight)
-                .statusBarsPadding()
-                .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 24.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .fadingBottomEdge(scroll)
+                .verticalScroll(scroll)
+                .padding(start = 24.dp, top = 12.dp, end = 24.dp, bottom = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(stringResource(greeting()), style = BreatheType.Small, color = BreatheTheme.colors.ink70)
-                    Text(
-                        stringResource(R.string.home_title),
-                        style = BreatheType.Heading,
-                        color = BreatheTheme.colors.ink,
-                        modifier = Modifier.semantics { heading() }
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(stringResource(greeting()), style = BreatheType.Small, color = BreatheTheme.colors.ink70)
+                Text(
+                    stringResource(R.string.home_title),
+                    style = BreatheType.Heading,
+                    color = BreatheTheme.colors.ink,
+                    modifier = Modifier.semantics { heading() }
+                )
+            }
+            Column(
+                modifier = Modifier.selectableGroup(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                (PresetPattern.entries + customPatterns).forEach { option ->
+                    PatternCard(
+                        pattern = option,
+                        selected = option == pattern,
+                        onClick = {
+                            pattern = option
+                            store.lastPattern = option
+                        },
+                        onEdit = if (option is CustomPattern) ({ onEditPattern(option.id) }) else null
                     )
                 }
-                Column(
-                    modifier = Modifier.selectableGroup(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    BreathPattern.entries.forEach { option ->
-                        PatternCard(
-                            pattern = option,
-                            selected = option == pattern,
-                            onClick = {
-                                pattern = option
-                                store.lastPattern = option
-                            }
-                        )
-                    }
-                }
+                CreatePatternCard(
+                    title = stringResource(R.string.pattern_create),
+                    description = stringResource(R.string.pattern_create_description),
+                    onClick = { onEditPattern(null) }
+                )
             }
+        }
 
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(top = 28.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                StreakLine(summary)
-                LengthControl(
-                    options = lengths,
-                    selected = minutes,
-                    label = { stringResource(R.string.minutes_short, it) },
-                    onSelect = {
-                        minutes = it
-                        store.lastMinutes = it
-                    },
-                    onLongClick = { editingLengths = true },
-                    onLongClickLabel = stringResource(R.string.home_edit_lengths)
-                )
-                PrimaryButton(
-                    text = stringResource(R.string.home_begin, patternTitle, minutes),
-                    onClick = { onBegin(pattern, minutes) }
-                )
-            }
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(start = 24.dp, top = 16.dp, end = 24.dp, bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            StreakLine(summary)
+            LengthControl(
+                options = lengths,
+                selected = minutes,
+                label = { stringResource(R.string.minutes_short, it) },
+                onSelect = {
+                    minutes = it
+                    store.lastMinutes = it
+                },
+                onLongClick = { editingLengths = true },
+                onLongClickLabel = stringResource(R.string.home_edit_lengths)
+            )
+            PrimaryButton(
+                text = stringResource(R.string.home_begin, patternTitle, minutes),
+                onClick = { onBegin(pattern, minutes) }
+            )
         }
     }
 

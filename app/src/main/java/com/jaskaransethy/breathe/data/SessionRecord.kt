@@ -6,7 +6,8 @@ data class SessionRecord(
     val day: Long,
     /** Local start time, minutes after midnight. */
     val startMinute: Int,
-    val pattern: BreathPattern,
+    /** A [PresetPattern] or [CustomPattern] id. Kept as text so deleting a custom pattern keeps its sessions. */
+    val patternId: String,
     /** The length the user chose: 2, 5 or 10. */
     val plannedMinutes: Int,
     val completedSeconds: Int,
@@ -17,7 +18,7 @@ data class SessionRecord(
     val isFull: Boolean get() = completedSeconds >= plannedMinutes * 60 * FULL_FRACTION
 
     fun serialize(): String =
-        listOf(day, startMinute, pattern.id, plannedMinutes, completedSeconds, if (paused) 1 else 0)
+        listOf(day, startMinute, patternId, plannedMinutes, completedSeconds, if (paused) 1 else 0)
             .joinToString(":")
 
     companion object {
@@ -29,7 +30,7 @@ data class SessionRecord(
             return SessionRecord(
                 day = p[0].toLongOrNull() ?: return null,
                 startMinute = p[1].toIntOrNull() ?: return null,
-                pattern = BreathPattern.entries.firstOrNull { it.id == p[2] } ?: return null,
+                patternId = p[2].takeIf { it.isNotEmpty() } ?: return null,
                 plannedMinutes = p[3].toIntOrNull() ?: return null,
                 completedSeconds = p[4].toIntOrNull() ?: return null,
                 paused = p[5] == "1"

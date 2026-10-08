@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
 
     private fun launchRequest(intent: Intent?): LaunchRequest? = when (intent?.action) {
         ACTION_START_SESSION -> LaunchRequest.StartSession(
-            BreathPattern.fromId(intent.getStringExtra(EXTRA_PATTERN)),
+            BreatheStore(this).pattern(intent.getStringExtra(EXTRA_PATTERN)),
             intent.getIntExtra(EXTRA_MINUTES, 0).takeIf { it > 0 } ?: BreatheStore(this).lastMinutes
         )
         ACTION_OPEN_SETTINGS -> LaunchRequest.OpenSettings

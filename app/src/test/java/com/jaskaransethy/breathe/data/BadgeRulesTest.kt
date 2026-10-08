@@ -12,12 +12,12 @@ class BadgeRulesTest {
 
     private fun rec(
         day: Long = today,
-        pattern: BreathPattern = BreathPattern.Calm,
+        pattern: BreathPattern = PresetPattern.Calm,
         minutes: Int = 5,
         seconds: Int = minutes * 60,
         paused: Boolean = false,
         startMinute: Int = 9 * 60
-    ) = SessionRecord(day, startMinute, pattern, minutes, seconds, paused)
+    ) = SessionRecord(day, startMinute, pattern.id, minutes, seconds, paused)
 
     private fun progress(records: List<SessionRecord>, badge: Badge, earned: Map<String, Long> = emptyMap()) =
         BadgeRules.evaluate(records, today, earned).single { it.badge == badge }
@@ -29,7 +29,7 @@ class BadgeRulesTest {
         assertTrue(rec(minutes = 5, seconds = 270).isFull)
         assertFalse(rec(minutes = 5, seconds = 269).isFull)
         // Partial sessions count for nothing.
-        val partial = List(10) { rec(day = today - it % 3, pattern = BreathPattern.Box, seconds = 269) }
+        val partial = List(10) { rec(day = today - it % 3, pattern = PresetPattern.Box, seconds = 269) }
         assertTrue(BadgeRules.newlyEarned(partial, today, emptyMap()).isEmpty())
         assertEquals(0, progress(partial, Badge.SquareMind).current)
         assertEquals(0, progress(partial, Badge.DeepWater).current)
@@ -103,34 +103,34 @@ class BadgeRulesTest {
 
     @Test
     fun `night tide needs 5 full sleep sessions started after 9 pm`() {
-        val night = List(4) { rec(pattern = BreathPattern.Sleep, startMinute = 21 * 60) }
+        val night = List(4) { rec(pattern = PresetPattern.Sleep, startMinute = 21 * 60) }
         assertFalse(earned(night, Badge.NightTide))
         assertEquals(4, progress(night, Badge.NightTide).current)
 
-        assertTrue(earned(night + rec(pattern = BreathPattern.Sleep, startMinute = 23 * 60 + 59), Badge.NightTide))
+        assertTrue(earned(night + rec(pattern = PresetPattern.Sleep, startMinute = 23 * 60 + 59), Badge.NightTide))
         // Just after midnight and up to 03:59 still counts as night.
-        assertTrue(earned(night + rec(pattern = BreathPattern.Sleep, startMinute = 0), Badge.NightTide))
-        assertTrue(earned(night + rec(pattern = BreathPattern.Sleep, startMinute = 3 * 60 + 59), Badge.NightTide))
+        assertTrue(earned(night + rec(pattern = PresetPattern.Sleep, startMinute = 0), Badge.NightTide))
+        assertTrue(earned(night + rec(pattern = PresetPattern.Sleep, startMinute = 3 * 60 + 59), Badge.NightTide))
         // 20:59, 04:00, another pattern, or a partial session do not.
-        assertFalse(earned(night + rec(pattern = BreathPattern.Sleep, startMinute = 20 * 60 + 59), Badge.NightTide))
-        assertFalse(earned(night + rec(pattern = BreathPattern.Sleep, startMinute = 4 * 60), Badge.NightTide))
-        assertFalse(earned(night + rec(pattern = BreathPattern.Calm, startMinute = 22 * 60), Badge.NightTide))
+        assertFalse(earned(night + rec(pattern = PresetPattern.Sleep, startMinute = 20 * 60 + 59), Badge.NightTide))
+        assertFalse(earned(night + rec(pattern = PresetPattern.Sleep, startMinute = 4 * 60), Badge.NightTide))
+        assertFalse(earned(night + rec(pattern = PresetPattern.Calm, startMinute = 22 * 60), Badge.NightTide))
         assertFalse(
-            earned(night + rec(pattern = BreathPattern.Sleep, startMinute = 22 * 60, seconds = 100), Badge.NightTide)
+            earned(night + rec(pattern = PresetPattern.Sleep, startMinute = 22 * 60, seconds = 100), Badge.NightTide)
         )
     }
 
     @Test
     fun `four winds needs each pattern completed 3 times`() {
-        val three = listOf(BreathPattern.Calm, BreathPattern.Box, BreathPattern.Balance)
+        val three = listOf(PresetPattern.Calm, PresetPattern.Box, PresetPattern.Balance)
             .flatMap { p -> List(3) { rec(pattern = p) } }
-        val twoSleep = List(2) { rec(pattern = BreathPattern.Sleep) }
+        val twoSleep = List(2) { rec(pattern = PresetPattern.Sleep) }
         assertFalse(earned(three + twoSleep, Badge.FourWinds))
         assertEquals(3, progress(three + twoSleep, Badge.FourWinds).current)
-        assertTrue(earned(three + twoSleep + rec(pattern = BreathPattern.Sleep), Badge.FourWinds))
+        assertTrue(earned(three + twoSleep + rec(pattern = PresetPattern.Sleep), Badge.FourWinds))
         assertEquals(
-            mapOf(BreathPattern.Calm to 3, BreathPattern.Box to 3, BreathPattern.Balance to 3, BreathPattern.Sleep to 2),
-            BadgeRules.fullSessionsByPattern(three + twoSleep + rec(pattern = BreathPattern.Sleep, seconds = 10))
+            mapOf(PresetPattern.Calm to 3, PresetPattern.Box to 3, PresetPattern.Balance to 3, PresetPattern.Sleep to 2),
+            BadgeRules.fullSessionsByPattern(three + twoSleep + rec(pattern = PresetPattern.Sleep, seconds = 10))
         )
     }
 
@@ -148,10 +148,10 @@ class BadgeRulesTest {
 
     @Test
     fun `square mind needs 10 full box sessions`() {
-        val nine = List(9) { rec(pattern = BreathPattern.Box) }
+        val nine = List(9) { rec(pattern = PresetPattern.Box) }
         assertFalse(earned(nine, Badge.SquareMind))
-        assertFalse(earned(nine + rec(pattern = BreathPattern.Box, seconds = 200), Badge.SquareMind))
-        assertTrue(earned(nine + rec(pattern = BreathPattern.Box), Badge.SquareMind))
+        assertFalse(earned(nine + rec(pattern = PresetPattern.Box, seconds = 200), Badge.SquareMind))
+        assertTrue(earned(nine + rec(pattern = PresetPattern.Box), Badge.SquareMind))
     }
 
     @Test

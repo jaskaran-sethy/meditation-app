@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -46,6 +47,7 @@ import com.jaskaransethy.breathe.data.GuideStyle
 import com.jaskaransethy.breathe.data.SessionRecord
 import com.jaskaransethy.breathe.data.SessionState
 import com.jaskaransethy.breathe.ui.components.IconCircleButton
+import com.jaskaransethy.breathe.ui.components.displayName
 import com.jaskaransethy.breathe.ui.components.PhotoBackground
 import com.jaskaransethy.breathe.ui.components.Rhythm
 import com.jaskaransethy.breathe.ui.icons.BreatheIcons
@@ -212,7 +214,13 @@ private fun TopBar(
     ) {
         IconCircleButton(BreatheIcons.Close, stringResource(R.string.session_close), onClose)
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(stringResource(pattern.title), style = BreatheType.BodyStrong, color = BreatheTheme.colors.ink)
+            Text(
+                pattern.displayName(),
+                style = BreatheType.BodyStrong,
+                color = BreatheTheme.colors.ink,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
             Rhythm(pattern.counts, BreatheType.SmallMedium, BreatheTheme.colors.ink70, gap = 5.dp)
         }
         IconCircleButton(
