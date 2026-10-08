@@ -14,6 +14,8 @@
     <string name="home_title">How would you like to breathe?</string>
     <string name="home_begin">Begin %1$s · %2$d min</string>
     <string name="minutes_short">%1$d min</string>
+    <!-- Screen reader action for long-pressing the length bar. -->
+    <string name="home_edit_lengths">Edit lengths</string>
     <plurals name="streak_and_week">
         <item quantity="one">%1$d-day streak · %2$d min this week</item>
         <item quantity="other">%1$d-day streak · %2$d min this week</item>
