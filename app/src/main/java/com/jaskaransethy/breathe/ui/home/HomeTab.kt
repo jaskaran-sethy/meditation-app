@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,12 +32,10 @@ import com.jaskaransethy.breathe.data.BreatheStore
 import com.jaskaransethy.breathe.data.CustomPattern
 import com.jaskaransethy.breathe.data.PresetPattern
 import com.jaskaransethy.breathe.data.PracticeSummary
-import com.jaskaransethy.breathe.data.SessionLengths
 import com.jaskaransethy.breathe.ui.components.CreatePatternCard
 import com.jaskaransethy.breathe.ui.components.LengthControl
 import com.jaskaransethy.breathe.ui.components.PatternCard
 import com.jaskaransethy.breathe.ui.components.PrimaryButton
-import com.jaskaransethy.breathe.ui.components.displayDescription
 import com.jaskaransethy.breathe.ui.components.displayName
 import com.jaskaransethy.breathe.ui.components.fadingBottomEdge
 import com.jaskaransethy.breathe.ui.icons.BreatheIcons
@@ -54,6 +53,8 @@ fun HomeTab(
     // The last choice is pre-selected so returning users can tap Begin straight away.
     var pattern by remember { mutableStateOf(store.lastPattern) }
     var minutes by remember { mutableStateOf(store.lastMinutes) }
+    var lengths by remember { mutableStateOf(store.sessionLengths) }
+    var editingLengths by rememberSaveable { mutableStateOf(false) }
     val customPatterns = remember { store.customPatterns }
     val summary = remember { store.summary() }
     val patternTitle = pattern.displayName()
@@ -85,18 +86,14 @@ fun HomeTab(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 (PresetPattern.entries + customPatterns).forEach { option ->
-                    val title = option.displayName()
                     PatternCard(
-                        title = title,
-                        description = option.displayDescription(),
-                        rhythm = option.counts,
+                        pattern = option,
                         selected = option == pattern,
                         onClick = {
                             pattern = option
                             store.lastPattern = option
                         },
-                        onEdit = if (option is CustomPattern) ({ onEditPattern(option.id) }) else null,
-                        editLabel = stringResource(R.string.pattern_edit, title)
+                        onEdit = if (option is CustomPattern) ({ onEditPattern(option.id) }) else null
                     )
                 }
                 CreatePatternCard(
@@ -113,19 +110,35 @@ fun HomeTab(
         ) {
             StreakLine(summary)
             LengthControl(
-                options = SessionLengths,
+                options = lengths,
                 selected = minutes,
                 label = { stringResource(R.string.minutes_short, it) },
                 onSelect = {
                     minutes = it
                     store.lastMinutes = it
-                }
+                },
+                onLongClick = { editingLengths = true },
+                onLongClickLabel = stringResource(R.string.home_edit_lengths)
             )
             PrimaryButton(
                 text = stringResource(R.string.home_begin, patternTitle, minutes),
                 onClick = { onBegin(pattern, minutes) }
             )
         }
+    }
+
+    if (editingLengths) {
+        LengthOptionsDialog(
+            lengths = lengths,
+            onDismiss = { editingLengths = false },
+            onConfirm = {
+                store.sessionLengths = it
+                lengths = store.sessionLengths
+                // Keeps the selection if its length is still there, else moves to the nearest.
+                minutes = store.lastMinutes
+                editingLengths = false
+            }
+        )
     }
 }
 

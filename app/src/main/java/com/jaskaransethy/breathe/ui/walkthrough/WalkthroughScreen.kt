@@ -325,9 +325,7 @@ private fun RhythmPicker(selected: PresetPattern, onSelect: (PresetPattern) -> U
     ) {
         PresetPattern.entries.forEach { option ->
             PatternCard(
-                title = stringResource(option.title),
-                description = stringResource(option.description),
-                rhythm = option.counts,
+                pattern = option,
                 selected = option == selected,
                 onClick = { onSelect(option) }
             )

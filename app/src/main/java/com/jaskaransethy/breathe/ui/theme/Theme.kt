@@ -185,7 +185,6 @@ object BreatheType {
     val Label = style(Josefin, 15, FontWeight.Medium)
     val LabelStrong = style(Josefin, 15, FontWeight.SemiBold)
     val LabelRegular = style(Josefin, 15, FontWeight.Normal)
-    val Rhythm = style(Josefin, 15, FontWeight.Medium, 1.2.em)
     val Small = style(Josefin, 14, FontWeight.Normal)
     val SmallMedium = style(Josefin, 14, FontWeight.Medium)
     val SmallStrong = style(Josefin, 14, FontWeight.SemiBold)

@@ -43,6 +43,7 @@ data class BadgeProgress(
 object BadgeRules {
     const val STEADY_START_SESSIONS = 3
     const val STEADY_START_WINDOW_DAYS = 7
+    /** Unbroken needs a session at least this long; longer custom lengths count too. */
     const val UNBROKEN_MINUTES = 10
     const val SEVEN_DAYS_DAYS = 7
     const val SEVEN_DAYS_WINDOW_DAYS = 14
@@ -159,8 +160,8 @@ object BadgeRules {
     fun inLastDays(records: List<SessionRecord>, today: Long, days: Int): List<SessionRecord> =
         records.filter { it.day in (today - days + 1)..today }
 
-    private fun isUnbroken(record: SessionRecord) =
-        record.plannedMinutes == UNBROKEN_MINUTES && record.isFull && !record.paused
+    fun isUnbroken(record: SessionRecord): Boolean =
+        record.plannedMinutes >= UNBROKEN_MINUTES && record.isFull && !record.paused
 
     private fun isNightTide(record: SessionRecord) =
         record.patternId == PresetPattern.Sleep.id && record.isFull && isNight(record)

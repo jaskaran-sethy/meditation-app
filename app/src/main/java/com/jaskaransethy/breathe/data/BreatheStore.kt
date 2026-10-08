@@ -93,10 +93,17 @@ class BreatheStore(context: Context) {
         prefs.edit().putString(KEY_CUSTOM_PATTERNS, patterns.joinToString(",") { it.serialize() }).apply()
     }
 
-    /** Pre-selects the length on Home. Changed from Home or from Settings → Default length. */
+    /** The lengths on Home's length bar, shortest first. Edited from Home or Settings. */
+    var sessionLengths: List<Int>
+        get() = SessionLengths.parse(prefs.getString(KEY_SESSION_LENGTHS, null))
+        set(value) = prefs.edit().putString(KEY_SESSION_LENGTHS, SessionLengths.serialize(value)).apply()
+
+    /**
+     * Pre-selects the length on Home. Changed from Home or from Settings → Default length. If the
+     * saved length was since removed from [sessionLengths], the nearest remaining one is used.
+     */
     var lastMinutes: Int
-        get() = prefs.getInt(KEY_LAST_MINUTES, DefaultSessionMinutes).takeIf { it in SessionLengths }
-            ?: DefaultSessionMinutes
+        get() = SessionLengths.closest(sessionLengths, prefs.getInt(KEY_LAST_MINUTES, DefaultSessionMinutes))
         set(value) = prefs.edit().putInt(KEY_LAST_MINUTES, value).apply()
 
     var soundEnabled: Boolean
@@ -260,6 +267,7 @@ class BreatheStore(context: Context) {
         const val KEY_ONBOARDING_COMPLETE = "onboarding_complete"
         const val KEY_LAST_PATTERN = "last_pattern"
         const val KEY_LAST_MINUTES = "last_minutes"
+        const val KEY_SESSION_LENGTHS = "session_lengths"
         const val KEY_SOUND_ENABLED = "sound_enabled"
         const val KEY_HAPTICS_ENABLED = "haptics_enabled"
         const val KEY_KEEP_AWAKE = "keep_screen_awake"

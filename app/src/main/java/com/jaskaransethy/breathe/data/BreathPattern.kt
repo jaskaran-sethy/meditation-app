@@ -100,7 +100,3 @@ data class CustomPattern(
         }
     }
 }
-
-/** Session lengths offered on Home, in minutes. */
-val SessionLengths = listOf(2, 5, 10)
-const val DefaultSessionMinutes = 5

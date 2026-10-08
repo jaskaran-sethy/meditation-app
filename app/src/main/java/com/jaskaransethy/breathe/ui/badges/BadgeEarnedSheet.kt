@@ -268,7 +268,14 @@ private fun proofFor(badge: Badge, records: List<SessionRecord>, today: Long): L
             )
         }
         Badge.Unbroken -> listOf(
-            Proof(stringResource(R.string.badges_minutes_value, BadgeRules.UNBROKEN_MINUTES), stringResource(R.string.badges_stat_length)),
+            // The latest qualifying session's own length, which may be more than 10 minutes.
+            Proof(
+                stringResource(
+                    R.string.badges_minutes_value,
+                    full.lastOrNull(BadgeRules::isUnbroken)?.plannedMinutes ?: BadgeRules.UNBROKEN_MINUTES
+                ),
+                stringResource(R.string.badges_stat_length)
+            ),
             Proof("0", stringResource(R.string.badges_stat_pauses)),
             Proof(full.size.toString(), sessions)
         )

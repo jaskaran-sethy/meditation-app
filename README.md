@@ -13,7 +13,7 @@ A calm, offline breathing app for Android, built with Jetpack Compose. Pick a rh
   | Balance | 5 · 5 | An even, coherent rhythm |
   | Sleep | 4 · 8 | Long exhales to drift off |
 
-- **Session lengths** of 2, 5 or 10 minutes, rounded up to a whole number of breaths.
+- **Session lengths** of 2, 5 or 10 minutes by default, or any three you choose (1 to 60 minutes) from Settings or by long-pressing them on Home. Sessions round up to a whole number of breaths.
 - **Three guides** to follow: Orb (grows and shrinks), Tide (water rising and ebbing in a vessel) and Trace (a point of light tracing a rounded square).
 - **Cues** through haptics, sound and screen-reader phase announcements. Haptics, sound and keeping the screen awake can each be turned off in Settings, and a session pauses when you leave the app.
 - **Reduce Motion** follows the system setting, with an override in Settings.
@@ -50,7 +50,7 @@ On Windows, use `gradlew.bat` instead of `./gradlew`.
 
 ## Tests
 
-Unit tests cover session timing, practice stats, reminder scheduling and badge rules:
+Unit tests cover session timing and lengths, practice stats, reminder scheduling and badge rules:
 
 ```bash
 ./gradlew testDebugUnitTest

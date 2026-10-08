@@ -2,11 +2,13 @@ package com.jaskaransethy.breathe.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -40,9 +42,12 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -163,14 +168,20 @@ fun IconCircleButton(
     }
 }
 
-/** Segmented 2 / 5 / 10 minute control; the selected segment uses the primary button colours. */
+/**
+ * Segmented minute control (2 / 5 / 10 by default); the selected segment uses the primary button
+ * colours. [onLongClick], if given, fires on a long press of any segment, e.g. to edit the lengths.
+ */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LengthControl(
     options: List<Int>,
     selected: Int,
     label: @Composable (Int) -> String,
     onSelect: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLongClick: (() -> Unit)? = null,
+    onLongClickLabel: String? = null
 ) {
     val colors = BreatheTheme.colors
     Row(
@@ -190,7 +201,14 @@ fun LengthControl(
                     .height(40.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(if (isSelected) colors.buttonBg else Color.Transparent)
-                    .selectable(selected = isSelected, role = Role.RadioButton) { onSelect(option) },
+                    // Clickable rather than selectable so it can take a long press too.
+                    .combinedClickable(
+                        role = Role.RadioButton,
+                        onLongClickLabel = onLongClickLabel,
+                        onLongClick = onLongClick,
+                        onClick = { onSelect(option) }
+                    )
+                    .semantics { this.selected = isSelected },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -234,28 +252,18 @@ fun BreathPattern.displayName(): String = when (this) {
     is CustomPattern -> name
 }
 
-/** A preset's purpose; the user's own patterns have none. */
-@Composable
-fun BreathPattern.displayDescription(): String? = when (this) {
-    is PresetPattern -> stringResource(description)
-    is CustomPattern -> null
-}
-
 /**
- * A breathing pattern choice: name, purpose, rhythm and a radio. Without a [description] (the
- * user's own patterns) the rhythm sits under the name instead. With [onEdit], a pencil button
- * (its own touch target, labelled [editLabel]) opens the pattern for editing.
+ * A breathing pattern choice: its drawing, name, rhythm, purpose and a radio. The user's own
+ * patterns have no purpose line, so their rhythm sits under the name; with [onEdit] they also
+ * get a pencil button (its own touch target) that opens the pattern for editing.
  */
 @Composable
 fun PatternCard(
-    title: String,
-    description: String?,
-    rhythm: List<Int>,
+    pattern: BreathPattern,
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onEdit: (() -> Unit)? = null,
-    editLabel: String? = null
+    onEdit: (() -> Unit)? = null
 ) {
     val colors = BreatheTheme.colors
     val shape = RoundedCornerShape(18.dp)
@@ -266,23 +274,40 @@ fun PatternCard(
             .background(if (selected) colors.surfaceSelected else colors.surface)
             .border(1.dp, if (selected) colors.ink70 else colors.ink12, shape)
             .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
-            .padding(horizontal = 18.dp, vertical = 19.dp),
+            .padding(start = 8.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(title, style = BreatheType.CardTitle, color = colors.ink, maxLines = 2, overflow = TextOverflow.Ellipsis)
-            if (description != null) {
-                Text(description, style = BreatheType.Small, color = colors.ink70)
-            } else {
-                Rhythm(rhythm, BreatheType.Rhythm, if (selected) colors.ink else colors.ink70)
+        PatternArtTile(pattern)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            val rhythmColor = if (selected) colors.ink80 else colors.ink60
+            when (pattern) {
+                is PresetPattern -> {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(stringResource(pattern.title), style = BreatheType.CardTitle, color = colors.ink)
+                        Rhythm(pattern.counts, BreatheType.SmallMedium, rhythmColor, gap = 5.dp)
+                    }
+                    Text(stringResource(pattern.description), style = BreatheType.Small, color = colors.ink70)
+                }
+                is CustomPattern -> {
+                    Text(
+                        pattern.name,
+                        style = BreatheType.CardTitle,
+                        color = colors.ink,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Rhythm(pattern.counts, BreatheType.SmallMedium, rhythmColor, gap = 5.dp)
+                }
             }
         }
-        if (description != null) Rhythm(rhythm, BreatheType.Rhythm, if (selected) colors.ink else colors.ink70)
         if (onEdit != null) {
             IconCircleButton(
                 icon = BreatheIcons.Pencil,
-                contentDescription = editLabel.orEmpty(),
+                contentDescription = stringResource(R.string.pattern_edit, pattern.displayName()),
                 onClick = onEdit,
                 size = 40.dp,
                 iconSize = 18.dp,
@@ -305,17 +330,18 @@ fun CreatePatternCard(title: String, description: String, onClick: () -> Unit, m
             .clip(shape)
             .border(1.dp, colors.ink20, shape)
             .clickable(role = Role.Button, onClick = onClick)
-            .padding(horizontal = 18.dp, vertical = 16.dp),
+            .padding(start = 8.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Same footprint as a pattern's drawing tile, so the cards line up.
         Box(
-            Modifier.size(36.dp).background(colors.accentFaint, CircleShape),
+            Modifier.size(60.dp).background(colors.accentFaint, RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(BreatheIcons.Plus, null, Modifier.size(18.dp), tint = colors.accent)
+            Icon(BreatheIcons.Plus, null, Modifier.size(22.dp), tint = colors.accent)
         }
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(title, style = BreatheType.CardTitle, color = colors.ink)
             Text(description, style = BreatheType.Small, color = colors.ink70)
         }
@@ -327,7 +353,7 @@ private fun Radio(selected: Boolean) {
     val colors = BreatheTheme.colors
     Box(
         modifier = Modifier
-            .size(20.dp)
+            .size(22.dp)
             .border(1.5.dp, if (selected) colors.ink else colors.ink40, CircleShape),
         contentAlignment = Alignment.Center
     ) {

@@ -64,12 +64,17 @@ class BadgeRulesTest {
     }
 
     @Test
-    fun `unbroken needs a full 10 minute session without pausing`() {
+    fun `unbroken needs a full session of 10 minutes or more without pausing`() {
         assertFalse(earned(listOf(rec(minutes = 5)), Badge.Unbroken))
+        assertFalse(earned(listOf(rec(minutes = 9)), Badge.Unbroken))
         assertFalse(earned(listOf(rec(minutes = 10, paused = true)), Badge.Unbroken))
         assertFalse(earned(listOf(rec(minutes = 10, seconds = 539)), Badge.Unbroken))
         assertTrue(earned(listOf(rec(minutes = 10, seconds = 540)), Badge.Unbroken))
         assertEquals(1, progress(listOf(rec(minutes = 10)), Badge.Unbroken).current)
+        // Longer custom lengths count too, as long as they're full and unpaused.
+        assertTrue(earned(listOf(rec(minutes = 15)), Badge.Unbroken))
+        assertFalse(earned(listOf(rec(minutes = 15, paused = true)), Badge.Unbroken))
+        assertFalse(earned(listOf(rec(minutes = 15, seconds = 600)), Badge.Unbroken))
     }
 
     @Test

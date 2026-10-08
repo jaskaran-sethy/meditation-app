@@ -30,6 +30,13 @@ object BreatheIcons {
     )
     val Play = lucide("play", "M6 3l14 9-14 9z")
     val Check = lucide("check", "M20 6 9 17l-5-5")
+    val Minus = lucide("minus", "M5 12h14")
+    val Plus = lucide("plus", "M5 12h14", "M12 5v14")
+    val Sliders = lucide(
+        "sliders-horizontal",
+        "M21 4h-7", "M10 4H3", "M21 12h-9", "M8 12H3", "M21 20h-5", "M12 20H3",
+        "M14 2v4", "M8 10v4", "M16 18v4"
+    )
     val RotateCcw = lucide("rotate-ccw", "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", "M3 3v5h5")
     val Wind = lucide(
         "wind",
@@ -142,8 +149,6 @@ object BreatheIcons {
         "M17 18h.01"
     )
     val Eye = lucide("eye", "M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z", circle(12f, 12f, 3f))
-    val Plus = lucide("plus", "M5 12h14", "M12 5v14")
-    val Minus = lucide("minus", "M5 12h14")
     val Pencil = lucide(
         "pencil",
         "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
