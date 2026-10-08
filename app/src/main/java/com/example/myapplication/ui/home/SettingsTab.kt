@@ -96,7 +96,7 @@ import java.text.DateFormatSymbols
 import java.util.Calendar
 import java.util.Locale
 
-private enum class SettingsDialog { Length, Guide, Time, Days, ReduceMotion }
+private enum class SettingsDialog { Length, Lengths, Guide, Time, Days, ReduceMotion }
 
 private val DialogTitleStyle = BreatheType.Tagline.copy(fontWeight = FontWeight.SemiBold)
 
@@ -123,6 +123,7 @@ fun SettingsTab(store: BreatheStore, onReplayWalkthrough: () -> Unit) {
     var sound by remember { mutableStateOf(store.soundEnabled) }
     var haptics by remember { mutableStateOf(store.hapticsEnabled) }
     var minutes by remember { mutableStateOf(store.lastMinutes) }
+    var lengths by remember { mutableStateOf(store.sessionLengths) }
     var guide by remember { mutableStateOf(store.guideStyle) }
     var reminder by remember { mutableStateOf(store.reminder) }
     var reduceMotion by remember { mutableStateOf(store.reduceMotion) }
@@ -166,6 +167,7 @@ fun SettingsTab(store: BreatheStore, onReplayWalkthrough: () -> Unit) {
             sound = sound,
             haptics = haptics,
             minutes = minutes,
+            lengths = lengths,
             guide = guide,
             reminder = reminder,
             reminderTime = remember(reminder.hour, reminder.minute) {
@@ -182,6 +184,7 @@ fun SettingsTab(store: BreatheStore, onReplayWalkthrough: () -> Unit) {
         onHaptics = { haptics = it; store.hapticsEnabled = it },
         onReplayWalkthrough = onReplayWalkthrough,
         onLength = { dialog = SettingsDialog.Length },
+        onLengths = { dialog = SettingsDialog.Lengths },
         onGuide = { dialog = SettingsDialog.Guide },
         onReminder = { setReminderEnabled(it) },
         onTime = { dialog = SettingsDialog.Time },
@@ -194,13 +197,24 @@ fun SettingsTab(store: BreatheStore, onReplayWalkthrough: () -> Unit) {
     when (dialog) {
         SettingsDialog.Length -> ChoiceDialog(
             title = stringResource(R.string.settings_default_length),
-            options = SessionLengths,
+            options = lengths,
             selected = minutes,
             label = { stringResource(R.string.minutes_short, it) },
             onDismiss = dismiss,
             onConfirm = {
                 minutes = it
                 store.lastMinutes = it
+                dialog = null
+            }
+        )
+        SettingsDialog.Lengths -> LengthOptionsDialog(
+            lengths = lengths,
+            onDismiss = dismiss,
+            onConfirm = {
+                store.sessionLengths = it
+                lengths = store.sessionLengths
+                // The default moves to the nearest length if its own was removed.
+                minutes = store.lastMinutes
                 dialog = null
             }
         )
@@ -260,6 +274,7 @@ private data class SettingsValues(
     val sound: Boolean,
     val haptics: Boolean,
     val minutes: Int,
+    val lengths: List<Int>,
     val guide: GuideStyle,
     val reminder: ReminderSettings,
     val reminderTime: String,
@@ -277,6 +292,7 @@ private fun SettingsContent(
     onSound: (Boolean) -> Unit,
     onHaptics: (Boolean) -> Unit,
     onLength: () -> Unit,
+    onLengths: () -> Unit,
     onGuide: () -> Unit,
     onReminder: (Boolean) -> Unit,
     onTime: () -> Unit,
@@ -324,6 +340,14 @@ private fun SettingsContent(
                 value = stringResource(R.string.minutes_short, values.minutes),
                 numeric = true,
                 onClick = onLength
+            )
+            RowDivider()
+            ValueRow(
+                icon = BreatheIcons.Sliders,
+                label = stringResource(R.string.settings_session_lengths),
+                value = lengthsSummary(values.lengths),
+                numeric = true,
+                onClick = onLengths
             )
             RowDivider()
             ValueRow(
@@ -586,7 +610,7 @@ private fun BreatheSwitch(checked: Boolean, animate: Boolean) {
 // ---- Dialogs ----
 
 @Composable
-private fun SettingsDialogFrame(
+internal fun SettingsDialogFrame(
     title: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -886,6 +910,7 @@ private fun SettingsPreviewContent() {
                 sound = true,
                 haptics = true,
                 minutes = 5,
+                lengths = SessionLengths.Default,
                 guide = GuideStyle.Default,
                 reminder = ReminderSettings(enabled = true, hour = 21, minute = 0),
                 reminderTime = "9:00 pm",
@@ -899,6 +924,7 @@ private fun SettingsPreviewContent() {
             onSound = {},
             onHaptics = {},
             onLength = {},
+            onLengths = {},
             onGuide = {},
             onReminder = {},
             onTime = {},

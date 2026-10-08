@@ -2,10 +2,12 @@ package com.example.myapplication.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -38,6 +40,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -122,14 +126,20 @@ fun IconCircleButton(
     }
 }
 
-/** Segmented 2 / 5 / 10 minute control; the selected segment uses the primary button colours. */
+/**
+ * Segmented minute control (2 / 5 / 10 by default); the selected segment uses the primary button
+ * colours. [onLongClick], if given, fires on a long press of any segment, e.g. to edit the lengths.
+ */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LengthControl(
     options: List<Int>,
     selected: Int,
     label: @Composable (Int) -> String,
     onSelect: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLongClick: (() -> Unit)? = null,
+    onLongClickLabel: String? = null
 ) {
     val colors = BreatheTheme.colors
     Row(
@@ -149,7 +159,14 @@ fun LengthControl(
                     .height(40.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(if (isSelected) colors.buttonBg else Color.Transparent)
-                    .selectable(selected = isSelected, role = Role.RadioButton) { onSelect(option) },
+                    // Clickable rather than selectable so it can take a long press too.
+                    .combinedClickable(
+                        role = Role.RadioButton,
+                        onLongClickLabel = onLongClickLabel,
+                        onLongClick = onLongClick,
+                        onClick = { onSelect(option) }
+                    )
+                    .semantics { this.selected = isSelected },
                 contentAlignment = Alignment.Center
             ) {
                 Text(

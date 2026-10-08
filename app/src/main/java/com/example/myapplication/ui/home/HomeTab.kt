@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +32,6 @@ import com.example.myapplication.R
 import com.example.myapplication.data.BreathPattern
 import com.example.myapplication.data.BreatheStore
 import com.example.myapplication.data.PracticeSummary
-import com.example.myapplication.data.SessionLengths
 import com.example.myapplication.ui.components.LengthControl
 import com.example.myapplication.ui.components.PatternCard
 import com.example.myapplication.ui.components.PrimaryButton
@@ -45,6 +45,8 @@ fun HomeTab(store: BreatheStore, onBegin: (BreathPattern, Int) -> Unit) {
     // The last choice is pre-selected so returning users can tap Begin straight away.
     var pattern by remember { mutableStateOf(store.lastPattern) }
     var minutes by remember { mutableStateOf(store.lastMinutes) }
+    var lengths by remember { mutableStateOf(store.sessionLengths) }
+    var editingLengths by rememberSaveable { mutableStateOf(false) }
     val summary = remember { store.summary() }
     val patternTitle = stringResource(pattern.title)
 
@@ -95,13 +97,15 @@ fun HomeTab(store: BreatheStore, onBegin: (BreathPattern, Int) -> Unit) {
             ) {
                 StreakLine(summary)
                 LengthControl(
-                    options = SessionLengths,
+                    options = lengths,
                     selected = minutes,
                     label = { stringResource(R.string.minutes_short, it) },
                     onSelect = {
                         minutes = it
                         store.lastMinutes = it
-                    }
+                    },
+                    onLongClick = { editingLengths = true },
+                    onLongClickLabel = stringResource(R.string.home_edit_lengths)
                 )
                 PrimaryButton(
                     text = stringResource(R.string.home_begin, patternTitle, minutes),
@@ -109,6 +113,20 @@ fun HomeTab(store: BreatheStore, onBegin: (BreathPattern, Int) -> Unit) {
                 )
             }
         }
+    }
+
+    if (editingLengths) {
+        LengthOptionsDialog(
+            lengths = lengths,
+            onDismiss = { editingLengths = false },
+            onConfirm = {
+                store.sessionLengths = it
+                lengths = store.sessionLengths
+                // Keeps the selection if its length is still there, else moves to the nearest.
+                minutes = store.lastMinutes
+                editingLengths = false
+            }
+        )
     }
 }
 
