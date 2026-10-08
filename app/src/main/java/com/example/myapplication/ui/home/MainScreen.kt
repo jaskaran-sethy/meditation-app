@@ -53,6 +53,7 @@ enum class MainTab(val label: Int, val icon: ImageVector) {
 fun MainScreen(
     store: BreatheStore,
     onBegin: (BreathPattern, Int) -> Unit,
+    onEditPattern: (String?) -> Unit,
     onOpenBadges: () -> Unit,
     onReplayWalkthrough: () -> Unit,
     initialTab: MainTab = MainTab.Breathe
@@ -70,7 +71,7 @@ fun MainScreen(
                 modifier = Modifier.weight(1f)
             ) { current ->
                 when (current) {
-                    MainTab.Breathe -> HomeTab(store, onBegin)
+                    MainTab.Breathe -> HomeTab(store, onBegin, onEditPattern)
                     MainTab.Progress -> ProgressTab(store, onOpenBadges)
                     MainTab.Settings -> SettingsTab(store, onReplayWalkthrough)
                 }

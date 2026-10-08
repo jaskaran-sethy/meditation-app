@@ -62,7 +62,7 @@ object BadgeRules {
         Badge.Unbroken -> 1
         Badge.SevenDays -> SEVEN_DAYS_DAYS
         Badge.NightTide -> NIGHT_TIDE_SESSIONS
-        Badge.FourWinds -> BreathPattern.entries.size
+        Badge.FourWinds -> PresetPattern.entries.size
         Badge.DeepWater -> DEEP_WATER_MINUTES
         Badge.SquareMind -> SQUARE_MIND_SESSIONS
         Badge.Mountain -> MOUNTAIN_DAYS
@@ -111,10 +111,13 @@ object BadgeRules {
             .sortedWith(compareByDescending<BadgeProgress> { it.fraction }.thenBy { it.remaining })
             .take(count)
 
-    /** Full sessions per pattern, including patterns with none (Four Winds' breakdown). */
-    fun fullSessionsByPattern(records: List<SessionRecord>): Map<BreathPattern, Int> {
-        val counts = records.filter { it.isFull }.groupingBy { it.pattern }.eachCount()
-        return BreathPattern.entries.associateWith { counts[it] ?: 0 }
+    /**
+     * Full sessions per preset, including presets with none (Four Winds' breakdown). The user's
+     * own patterns count towards every other badge, but Four Winds is about the four presets.
+     */
+    fun fullSessionsByPattern(records: List<SessionRecord>): Map<PresetPattern, Int> {
+        val counts = records.filter { it.isFull }.groupingBy { it.patternId }.eachCount()
+        return PresetPattern.entries.associateWith { counts[it.id] ?: 0 }
     }
 
     /** True for a session started after 9 pm, or in the small hours before 4 am. */
@@ -134,9 +137,9 @@ object BadgeRules {
         Badge.SevenDays ->
             bestWindow(full.map { it.day }.distinct(), SEVEN_DAYS_WINDOW_DAYS) >= SEVEN_DAYS_DAYS
         Badge.NightTide -> full.count { isNightTide(it) } >= NIGHT_TIDE_SESSIONS
-        Badge.FourWinds -> patternsDone(full) >= BreathPattern.entries.size
+        Badge.FourWinds -> patternsDone(full) >= PresetPattern.entries.size
         Badge.DeepWater -> fullMinutes(full) >= DEEP_WATER_MINUTES
-        Badge.SquareMind -> full.count { it.pattern == BreathPattern.Box } >= SQUARE_MIND_SESSIONS
+        Badge.SquareMind -> full.count { it.patternId == PresetPattern.Box.id } >= SQUARE_MIND_SESSIONS
         Badge.Mountain ->
             bestWindow(full.map { it.day }.distinct(), MOUNTAIN_WINDOW_DAYS) >= MOUNTAIN_DAYS
     }
@@ -148,7 +151,7 @@ object BadgeRules {
         Badge.NightTide -> full.count { isNightTide(it) }
         Badge.FourWinds -> patternsDone(full)
         Badge.DeepWater -> fullMinutes(full)
-        Badge.SquareMind -> full.count { it.pattern == BreathPattern.Box }
+        Badge.SquareMind -> full.count { it.patternId == PresetPattern.Box.id }
         Badge.Mountain -> inLastDays(full, today, MOUNTAIN_WINDOW_DAYS).map { it.day }.distinct().size
     }
 
@@ -160,7 +163,7 @@ object BadgeRules {
         record.plannedMinutes == UNBROKEN_MINUTES && record.isFull && !record.paused
 
     private fun isNightTide(record: SessionRecord) =
-        record.pattern == BreathPattern.Sleep && record.isFull && isNight(record)
+        record.patternId == PresetPattern.Sleep.id && record.isFull && isNight(record)
 
     private fun patternsDone(full: List<SessionRecord>): Int =
         fullSessionsByPattern(full).values.count { it >= FOUR_WINDS_PER_PATTERN }

@@ -27,6 +27,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.data.BreathPattern
+import com.example.myapplication.data.PresetPattern
 import com.example.myapplication.data.Phase
 import com.example.myapplication.ui.theme.BreatheColors
 import com.example.myapplication.ui.theme.BreatheTheme
@@ -270,17 +271,17 @@ private fun DrawScope.drawDot(at: Offset, glow: Color) {
 @Preview(widthDp = 980, heightDp = 340, name = "Trace · Box · dark")
 @Composable
 private fun TraceDarkPreview() {
-    GuidePreviewRow(dark = true) { TraceGuide(it, BreathPattern.Box) }
+    GuidePreviewRow(dark = true) { TraceGuide(it, PresetPattern.Box) }
 }
 
 @Preview(widthDp = 980, heightDp = 340, name = "Trace · 4-7-8 · light")
 @Composable
 private fun TraceLightPreview() {
-    GuidePreviewRow(dark = false) { TraceGuide(it, BreathPattern.Calm) }
+    GuidePreviewRow(dark = false) { TraceGuide(it, PresetPattern.Calm) }
 }
 
 @Preview(widthDp = 980, heightDp = 340, name = "Trace · reduce motion")
 @Composable
 private fun TraceReduceMotionPreview() {
-    GuidePreviewRow(dark = true, reduceMotion = true) { TraceGuide(it, BreathPattern.Box) }
+    GuidePreviewRow(dark = true, reduceMotion = true) { TraceGuide(it, PresetPattern.Box) }
 }

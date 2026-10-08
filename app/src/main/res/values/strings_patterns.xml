@@ -1,0 +1,40 @@
+<resources>
+    <!-- Custom patterns on Home -->
+    <string name="pattern_create">Create your own</string>
+    <string name="pattern_create_description">Set your own in, hold and out</string>
+    <string name="pattern_edit">Edit %1$s</string>
+
+    <!-- Pattern builder -->
+    <string name="pattern_editor_back">Back to Breathe</string>
+    <string name="pattern_editor_new_title">New pattern</string>
+    <string name="pattern_editor_edit_title">Edit pattern</string>
+    <string name="pattern_editor_intro">Choose how long each part of a breath lasts. Set a hold to Off to skip it.</string>
+    <string name="pattern_editor_name">Name</string>
+    <string name="pattern_editor_default_name">My rhythm</string>
+    <string name="pattern_editor_rhythm">Rhythm</string>
+    <string name="pattern_editor_inhale">Breathe in</string>
+    <string name="pattern_editor_exhale">Breathe out</string>
+    <string name="pattern_editor_hold">Hold</string>
+    <string name="pattern_editor_hold_in_hint">After breathing in</string>
+    <string name="pattern_editor_hold_out_hint">After breathing out</string>
+    <string name="pattern_editor_hold_in_spoken">Hold after breathing in</string>
+    <string name="pattern_editor_hold_out_spoken">Hold after breathing out</string>
+    <string name="pattern_editor_shorter">Shorter: %1$s</string>
+    <string name="pattern_editor_longer">Longer: %1$s</string>
+    <string name="pattern_editor_seconds">%1$d s</string>
+    <plurals name="pattern_editor_seconds_spoken">
+        <item quantity="one">%1$d second</item>
+        <item quantity="other">%1$d seconds</item>
+    </plurals>
+    <string name="pattern_editor_off">Off</string>
+    <plurals name="pattern_editor_summary">
+        <item quantity="one">%1$d s a breath · about %2$d breath a minute</item>
+        <item quantity="other">%1$d s a breath · about %2$d breaths a minute</item>
+    </plurals>
+    <string name="pattern_editor_save">Save pattern</string>
+    <string name="pattern_editor_delete">Delete pattern</string>
+    <string name="pattern_editor_delete_title">Delete %1$s?</string>
+    <string name="pattern_editor_delete_text">Sessions you breathed with it stay in your progress and badges.</string>
+    <string name="pattern_editor_delete_confirm">Delete</string>
+    <string name="pattern_editor_cancel">Cancel</string>
+</resources>

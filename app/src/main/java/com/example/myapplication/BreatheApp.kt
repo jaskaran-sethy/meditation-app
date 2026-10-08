@@ -33,6 +33,7 @@ import com.example.myapplication.ui.badges.BadgesScreen
 import com.example.myapplication.ui.complete.CompleteScreen
 import com.example.myapplication.ui.home.MainScreen
 import com.example.myapplication.ui.home.MainTab
+import com.example.myapplication.ui.patterns.PatternEditorScreen
 import com.example.myapplication.ui.session.SessionResult
 import com.example.myapplication.ui.session.SessionScreen
 import com.example.myapplication.ui.welcome.WelcomeScreen
@@ -44,7 +45,9 @@ private object Routes {
     const val COMPLETE = "complete/{pattern}/{minutes}/{breaths}?badges={badges}"
     const val BADGES = "badges"
     const val WALKTHROUGH = "walkthrough"
+    const val PATTERN = "pattern?id={id}"
 
+    fun pattern(id: String?) = if (id == null) "pattern" else "pattern?id=$id"
     fun session(pattern: BreathPattern, minutes: Int) = "session/${pattern.id}/$minutes"
     fun complete(pattern: BreathPattern, minutes: Int, breaths: Int, badges: List<Badge>) =
         "complete/${pattern.id}/$minutes/$breaths?badges=${badges.joinToString(",") { it.id }}"
@@ -106,8 +109,41 @@ fun BreatheApp(store: BreatheStore, launch: LaunchRequest? = null) {
                 store = store,
                 initialTab = if (launch == LaunchRequest.OpenSettings) MainTab.Settings else MainTab.Breathe,
                 onBegin = { pattern, minutes -> navController.navigate(Routes.session(pattern, minutes)) },
+                onEditPattern = { id -> navController.navigate(Routes.pattern(id)) },
                 onOpenBadges = { navController.navigate(Routes.BADGES) },
                 onReplayWalkthrough = { navController.navigate(Routes.WALKTHROUGH) }
+            )
+        }
+
+        composable(
+            Routes.PATTERN,
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { entry ->
+            val id = entry.arguments?.getString("id")
+            val existing = remember(id) { store.customPatterns.firstOrNull { it.id == id } }
+            // Act once: a double-tapped Save must not store the pattern twice or pop Home too.
+            fun close(action: () -> Unit) {
+                if (navController.currentBackStackEntry != entry) return
+                action()
+                navController.popBackStack()
+            }
+            PatternEditorScreen(
+                existing = existing,
+                onSave = { pattern ->
+                    close {
+                        // A saved pattern is selected on Home, ready to Begin.
+                        store.saveCustomPattern(pattern)
+                        store.lastPattern = pattern
+                    }
+                },
+                onDelete = { pattern -> close { store.deleteCustomPattern(pattern.id) } },
+                onBack = { close { } }
             )
         }
 
@@ -122,7 +158,7 @@ fun BreatheApp(store: BreatheStore, launch: LaunchRequest? = null) {
                 navArgument("minutes") { type = NavType.IntType }
             )
         ) { entry ->
-            val pattern = BreathPattern.fromId(entry.arguments?.getString("pattern"))
+            val pattern = remember { store.pattern(entry.arguments?.getString("pattern")) }
             val minutes = entry.arguments?.getInt("minutes") ?: DefaultSessionMinutes
             // Read per session so a change in Settings applies; the session's own toggle saves too.
             var soundEnabled by remember { mutableStateOf(store.soundEnabled) }
@@ -164,7 +200,7 @@ fun BreatheApp(store: BreatheStore, launch: LaunchRequest? = null) {
                 }
             )
         ) { entry ->
-            val pattern = BreathPattern.fromId(entry.arguments?.getString("pattern"))
+            val pattern = remember { store.pattern(entry.arguments?.getString("pattern")) }
             val minutes = entry.arguments?.getInt("minutes") ?: DefaultSessionMinutes
             val streakDays = remember { store.summary().streakDays }
             val earned = remember {

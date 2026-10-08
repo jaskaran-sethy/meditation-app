@@ -9,27 +9,27 @@ class SessionPlanTest {
 
     @Test
     fun `patterns skip zero-length holds`() {
-        assertEquals(listOf(Phase.Inhale, Phase.HoldIn, Phase.Exhale), BreathPattern.Calm.steps.map { it.phase })
-        assertEquals(listOf(Phase.Inhale, Phase.Exhale), BreathPattern.Sleep.steps.map { it.phase })
-        assertEquals(4, BreathPattern.Box.steps.size)
-        assertEquals("4 · 7 · 8", BreathPattern.Calm.rhythm)
-        assertEquals("4 · 4 · 4 · 4", BreathPattern.Box.rhythm)
+        assertEquals(listOf(Phase.Inhale, Phase.HoldIn, Phase.Exhale), PresetPattern.Calm.steps.map { it.phase })
+        assertEquals(listOf(Phase.Inhale, Phase.Exhale), PresetPattern.Sleep.steps.map { it.phase })
+        assertEquals(4, PresetPattern.Box.steps.size)
+        assertEquals("4 · 7 · 8", PresetPattern.Calm.rhythm)
+        assertEquals("4 · 4 · 4 · 4", PresetPattern.Box.rhythm)
     }
 
     @Test
     fun `session covers the chosen length with whole breaths`() {
         // Calm is 19 s per breath: 300 s needs 16 breaths (304 s).
-        val plan = SessionPlan(BreathPattern.Calm, 5)
+        val plan = SessionPlan(PresetPattern.Calm, 5)
         assertEquals(16, plan.breaths)
         assertEquals(304_000L, plan.totalMs)
 
         // Balance is 10 s per breath and divides 2 minutes exactly.
-        assertEquals(12, SessionPlan(BreathPattern.Balance, 2).breaths)
+        assertEquals(12, SessionPlan(PresetPattern.Balance, 2).breaths)
     }
 
     @Test
     fun `state walks through the phases of a breath`() {
-        val plan = SessionPlan(BreathPattern.Calm, 5)
+        val plan = SessionPlan(PresetPattern.Calm, 5)
 
         plan.stateAt(0).let {
             assertEquals(Phase.Inhale, it.step.phase)
@@ -54,7 +54,7 @@ class SessionPlanTest {
 
     @Test
     fun `session finishes at the end of the last exhale`() {
-        val plan = SessionPlan(BreathPattern.Sleep, 2)
+        val plan = SessionPlan(PresetPattern.Sleep, 2)
         val almost = plan.stateAt(plan.totalMs - 1)
         assertFalse(almost.finished)
         assertEquals(Phase.Exhale, almost.step.phase)

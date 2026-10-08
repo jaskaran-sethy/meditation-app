@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat
 import com.example.myapplication.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.data.BreatheStore
+import com.example.myapplication.data.CustomPattern
+import com.example.myapplication.data.PresetPattern
 import java.util.Calendar
 
 object ReminderNotification {
@@ -33,7 +35,10 @@ object ReminderNotification {
         // Session and length match the last one the user chose.
         val pattern = store.lastPattern
         val minutes = store.lastMinutes
-        val patternName = context.getString(pattern.title)
+        val patternName = when (pattern) {
+            is PresetPattern -> context.getString(pattern.title)
+            is CustomPattern -> pattern.name
+        }
         val start = MainActivity.startSessionIntent(context, pattern, minutes)
         val startPending = PendingIntent.getActivity(
             context, 0, start, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT

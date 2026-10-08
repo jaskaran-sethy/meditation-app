@@ -57,9 +57,41 @@ class BreatheStore(context: Context) {
         get() = prefs.getBoolean(KEY_ONBOARDING_COMPLETE, false)
         set(value) = prefs.edit().putBoolean(KEY_ONBOARDING_COMPLETE, value).apply()
 
+    /** Falls back to the default if the last pattern was a custom one that has since been deleted. */
     var lastPattern: BreathPattern
-        get() = BreathPattern.fromId(prefs.getString(KEY_LAST_PATTERN, null))
+        get() = pattern(prefs.getString(KEY_LAST_PATTERN, null))
         set(value) = prefs.edit().putString(KEY_LAST_PATTERN, value.id).apply()
+
+    /** The user's own patterns, oldest first. */
+    val customPatterns: List<CustomPattern>
+        get() = prefs.getString(KEY_CUSTOM_PATTERNS, null).orEmpty().split(',').mapNotNull(CustomPattern::parse)
+
+    /** A preset or custom pattern by id; the default if there is no such pattern (any more). */
+    fun pattern(id: String?): BreathPattern =
+        PresetPattern.fromId(id) ?: customPatterns.firstOrNull { it.id == id } ?: BreathPattern.Default
+
+    /** Adds [pattern], or replaces the saved pattern with the same id in place. */
+    fun saveCustomPattern(pattern: CustomPattern) {
+        val existing = customPatterns
+        val all = if (existing.any { it.id == pattern.id }) {
+            existing.map { if (it.id == pattern.id) pattern else it }
+        } else {
+            existing + pattern
+        }
+        writeCustomPatterns(all)
+    }
+
+    /** Past sessions with it stay in the history and still count towards badges. */
+    fun deleteCustomPattern(id: String) {
+        writeCustomPatterns(customPatterns.filterNot { it.id == id })
+        if (prefs.getString(KEY_LAST_PATTERN, null) == id) {
+            prefs.edit().putString(KEY_LAST_PATTERN, BreathPattern.Default.id).apply()
+        }
+    }
+
+    private fun writeCustomPatterns(patterns: List<CustomPattern>) {
+        prefs.edit().putString(KEY_CUSTOM_PATTERNS, patterns.joinToString(",") { it.serialize() }).apply()
+    }
 
     /** Pre-selects the length on Home. Changed from Home or from Settings → Default length. */
     var lastMinutes: Int
@@ -164,7 +196,7 @@ class BreatheStore(context: Context) {
         return SessionRecord(
             day = today(startMillis),
             startMinute = calendar.get(java.util.Calendar.HOUR_OF_DAY) * 60 + calendar.get(java.util.Calendar.MINUTE),
-            pattern = pattern,
+            patternId = pattern.id,
             plannedMinutes = plannedMinutes,
             completedSeconds = completedSeconds,
             paused = paused
@@ -244,5 +276,6 @@ class BreatheStore(context: Context) {
         const val KEY_GUIDE_STYLE = "guide_style"
         const val KEY_EARNED_BADGES = "earned_badges"
         const val KEY_SESSION_LOG = "session_log"
+        const val KEY_CUSTOM_PATTERNS = "custom_patterns"
     }
 }

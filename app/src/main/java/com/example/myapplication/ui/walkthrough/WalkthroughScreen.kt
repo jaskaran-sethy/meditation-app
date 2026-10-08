@@ -57,7 +57,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
-import com.example.myapplication.data.BreathPattern
+import com.example.myapplication.data.PresetPattern
 import com.example.myapplication.data.BreatheStore
 import com.example.myapplication.data.shouldReduceMotion
 import com.example.myapplication.ui.components.Medal
@@ -83,13 +83,13 @@ const val FirstSessionMinutes = 2
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WalkthroughScreen(store: BreatheStore, onStart: (BreathPattern) -> Unit) {
+fun WalkthroughScreen(store: BreatheStore, onStart: (PresetPattern) -> Unit) {
     val context = LocalContext.current
     val reduceMotion = remember { shouldReduceMotion(context, store) }
     val pager = rememberPagerState(pageCount = { STEPS })
     val scope = rememberCoroutineScope()
     // The first session defaults to Calm; step 2 lets people pick something else.
-    var pattern by rememberSaveable { mutableStateOf(BreathPattern.Default) }
+    var pattern by rememberSaveable { mutableStateOf(PresetPattern.Calm) }
     val colors = BreatheTheme.colors
 
     fun goTo(page: Int) {
@@ -318,12 +318,12 @@ private fun PhaseChip(phase: DemoPhase, active: Boolean) {
 
 /** The real pattern cards from Home, so nothing looks new later. */
 @Composable
-private fun RhythmPicker(selected: BreathPattern, onSelect: (BreathPattern) -> Unit) {
+private fun RhythmPicker(selected: PresetPattern, onSelect: (PresetPattern) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 28.dp).selectableGroup(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        BreathPattern.entries.forEach { option ->
+        PresetPattern.entries.forEach { option ->
             PatternCard(
                 title = stringResource(option.title),
                 description = stringResource(option.description),

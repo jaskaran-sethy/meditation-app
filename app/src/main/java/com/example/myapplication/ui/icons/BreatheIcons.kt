@@ -142,6 +142,21 @@ object BreatheIcons {
         "M17 18h.01"
     )
     val Eye = lucide("eye", "M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z", circle(12f, 12f, 3f))
+    val Plus = lucide("plus", "M5 12h14", "M12 5v14")
+    val Minus = lucide("minus", "M5 12h14")
+    val Pencil = lucide(
+        "pencil",
+        "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+        "M15 5l4 4"
+    )
+    val Trash = lucide(
+        "trash-2",
+        "M3 6h18",
+        "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6",
+        "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2",
+        "M10 11v6",
+        "M14 11v6"
+    )
 
     private fun circle(cx: Float, cy: Float, r: Float) =
         "M${cx - r} ${cy}a$r $r 0 1 0 ${2 * r} 0a$r $r 0 1 0 ${-2 * r} 0"

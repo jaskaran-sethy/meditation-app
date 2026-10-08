@@ -3,6 +3,7 @@ package com.example.myapplication.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,11 +27,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -39,10 +44,15 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.data.BreathPattern
+import com.example.myapplication.data.CustomPattern
+import com.example.myapplication.data.PresetPattern
 import com.example.myapplication.ui.icons.BreatheIcons
 import com.example.myapplication.ui.theme.BreatheTheme
 import com.example.myapplication.ui.theme.BreatheType
@@ -65,6 +75,29 @@ fun PhotoBackground(
         content()
     }
 }
+
+/**
+ * Fades the bottom [height] of a scrolling area into whatever is behind it while there is more
+ * to scroll, so content slides softly under pinned controls instead of being cut off.
+ */
+fun Modifier.fadingBottomEdge(state: ScrollState, height: Dp = 24.dp): Modifier = this
+    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+    .drawWithContent {
+        drawContent()
+        if (state.canScrollForward) {
+            val fade = height.toPx()
+            drawRect(
+                brush = Brush.verticalGradient(
+                    listOf(Color.Black, Color.Transparent),
+                    startY = size.height - fade,
+                    endY = size.height
+                ),
+                topLeft = Offset(0f, size.height - fade),
+                size = Size(size.width, fade),
+                blendMode = BlendMode.DstIn
+            )
+        }
+    }
 
 /** 56 dp pill — the one primary action per screen. White on dark, Deep Teal on light. */
 @Composable
@@ -91,7 +124,15 @@ fun PrimaryButton(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text, style = BreatheType.Button, color = colors.buttonFg)
+        // Custom pattern names can be long: keep the button one line.
+        Text(
+            text,
+            style = BreatheType.Button,
+            color = colors.buttonFg,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f, fill = false)
+        )
         if (showArrow) {
             Icon(BreatheIcons.ArrowRight, null, Modifier.size(18.dp), tint = colors.buttonFg)
         }
@@ -186,15 +227,35 @@ fun Rhythm(
     }
 }
 
-/** A breathing pattern choice: name, purpose, rhythm and a radio. */
+/** The pattern's name: a preset's title, or the name the user gave it. */
+@Composable
+fun BreathPattern.displayName(): String = when (this) {
+    is PresetPattern -> stringResource(title)
+    is CustomPattern -> name
+}
+
+/** A preset's purpose; the user's own patterns have none. */
+@Composable
+fun BreathPattern.displayDescription(): String? = when (this) {
+    is PresetPattern -> stringResource(description)
+    is CustomPattern -> null
+}
+
+/**
+ * A breathing pattern choice: name, purpose, rhythm and a radio. Without a [description] (the
+ * user's own patterns) the rhythm sits under the name instead. With [onEdit], a pencil button
+ * (its own touch target, labelled [editLabel]) opens the pattern for editing.
+ */
 @Composable
 fun PatternCard(
     title: String,
-    description: String,
+    description: String?,
     rhythm: List<Int>,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEdit: (() -> Unit)? = null,
+    editLabel: String? = null
 ) {
     val colors = BreatheTheme.colors
     val shape = RoundedCornerShape(18.dp)
@@ -210,11 +271,54 @@ fun PatternCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(title, style = BreatheType.CardTitle, color = colors.ink, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            if (description != null) {
+                Text(description, style = BreatheType.Small, color = colors.ink70)
+            } else {
+                Rhythm(rhythm, BreatheType.Rhythm, if (selected) colors.ink else colors.ink70)
+            }
+        }
+        if (description != null) Rhythm(rhythm, BreatheType.Rhythm, if (selected) colors.ink else colors.ink70)
+        if (onEdit != null) {
+            IconCircleButton(
+                icon = BreatheIcons.Pencil,
+                contentDescription = editLabel.orEmpty(),
+                onClick = onEdit,
+                size = 40.dp,
+                iconSize = 18.dp,
+                background = colors.surfaceRaised,
+                tint = colors.ink80
+            )
+        }
+        Radio(selected)
+    }
+}
+
+/** Opens the pattern builder; sits under the pattern cards with a quieter, outline-only look. */
+@Composable
+fun CreatePatternCard(title: String, description: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val colors = BreatheTheme.colors
+    val shape = RoundedCornerShape(18.dp)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .border(1.dp, colors.ink20, shape)
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(horizontal = 18.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            Modifier.size(36.dp).background(colors.accentFaint, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(BreatheIcons.Plus, null, Modifier.size(18.dp), tint = colors.accent)
+        }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(title, style = BreatheType.CardTitle, color = colors.ink)
             Text(description, style = BreatheType.Small, color = colors.ink70)
         }
-        Rhythm(rhythm, BreatheType.Rhythm, if (selected) colors.ink else colors.ink70)
-        Radio(selected)
     }
 }
 

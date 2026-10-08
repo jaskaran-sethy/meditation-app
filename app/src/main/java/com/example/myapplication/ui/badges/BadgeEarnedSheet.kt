@@ -59,7 +59,7 @@ import com.example.myapplication.R
 import com.example.myapplication.data.Badge
 import com.example.myapplication.data.BadgeProgress
 import com.example.myapplication.data.BadgeRules
-import com.example.myapplication.data.BreathPattern
+import com.example.myapplication.data.PresetPattern
 import com.example.myapplication.data.BreatheStore
 import com.example.myapplication.data.SessionRecord
 import com.example.myapplication.data.shouldReduceMotion
@@ -273,7 +273,7 @@ private fun proofFor(badge: Badge, records: List<SessionRecord>, today: Long): L
             Proof(full.size.toString(), sessions)
         )
         Badge.NightTide -> {
-            val night = full.filter { it.pattern == BreathPattern.Sleep && BadgeRules.isNight(it) }
+            val night = full.filter { it.patternId == PresetPattern.Sleep.id && BadgeRules.isNight(it) }
             listOf(
                 Proof(night.size.toString(), stringResource(R.string.badges_stat_night_sessions)),
                 Proof(minutesValue(night), breathed),
@@ -281,7 +281,7 @@ private fun proofFor(badge: Badge, records: List<SessionRecord>, today: Long): L
             )
         }
         Badge.FourWinds -> listOf(
-            Proof(BreathPattern.entries.size.toString(), stringResource(R.string.badges_stat_patterns)),
+            Proof(PresetPattern.entries.size.toString(), stringResource(R.string.badges_stat_patterns)),
             Proof(full.size.toString(), sessions),
             Proof(minutesValue(full), breathed)
         )
@@ -291,7 +291,7 @@ private fun proofFor(badge: Badge, records: List<SessionRecord>, today: Long): L
             Proof(dayCount(full).toString(), days)
         )
         Badge.SquareMind -> {
-            val box = full.filter { it.pattern == BreathPattern.Box }
+            val box = full.filter { it.patternId == PresetPattern.Box.id }
             listOf(
                 Proof(box.size.toString(), stringResource(R.string.badges_stat_box_sessions)),
                 Proof(minutesValue(box), breathed),
