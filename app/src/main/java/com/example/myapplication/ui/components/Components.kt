@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
+import com.example.myapplication.data.BreathPattern
 import com.example.myapplication.ui.icons.BreatheIcons
 import com.example.myapplication.ui.theme.BreatheTheme
 import com.example.myapplication.ui.theme.BreatheType
@@ -186,12 +188,10 @@ fun Rhythm(
     }
 }
 
-/** A breathing pattern choice: name, purpose, rhythm and a radio. */
+/** A breathing pattern choice: its drawing, name, rhythm, purpose and a radio. */
 @Composable
 fun PatternCard(
-    title: String,
-    description: String,
-    rhythm: List<Int>,
+    pattern: BreathPattern,
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -205,15 +205,26 @@ fun PatternCard(
             .background(if (selected) colors.surfaceSelected else colors.surface)
             .border(1.dp, if (selected) colors.ink70 else colors.ink12, shape)
             .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
-            .padding(horizontal = 18.dp, vertical = 19.dp),
+            .padding(start = 8.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(title, style = BreatheType.CardTitle, color = colors.ink)
-            Text(description, style = BreatheType.Small, color = colors.ink70)
+        PatternArtTile(pattern)
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(stringResource(pattern.title), style = BreatheType.CardTitle, color = colors.ink)
+                Rhythm(
+                    pattern.counts,
+                    BreatheType.SmallMedium,
+                    if (selected) colors.ink80 else colors.ink60,
+                    gap = 5.dp
+                )
+            }
+            Text(stringResource(pattern.description), style = BreatheType.Small, color = colors.ink70)
         }
-        Rhythm(rhythm, BreatheType.Rhythm, if (selected) colors.ink else colors.ink70)
         Radio(selected)
     }
 }
@@ -223,7 +234,7 @@ private fun Radio(selected: Boolean) {
     val colors = BreatheTheme.colors
     Box(
         modifier = Modifier
-            .size(20.dp)
+            .size(22.dp)
             .border(1.5.dp, if (selected) colors.ink else colors.ink40, CircleShape),
         contentAlignment = Alignment.Center
     ) {
