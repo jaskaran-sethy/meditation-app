@@ -66,6 +66,7 @@ import com.jaskaransethy.breathe.ui.components.Rhythm
 import com.jaskaransethy.breathe.ui.components.fadingBottomEdge
 import com.jaskaransethy.breathe.ui.icons.BreatheIcons
 import com.jaskaransethy.breathe.ui.theme.BreatheTheme
+import com.jaskaransethy.breathe.ui.theme.screenBackground
 import com.jaskaransethy.breathe.ui.theme.BreatheType
 import kotlin.math.roundToInt
 
@@ -109,7 +110,7 @@ fun PatternEditorScreen(
 
     BackHandler(onBack = onBack)
 
-    Box(Modifier.fillMaxSize().background(colors.background)) {
+    Box(Modifier.fillMaxSize().screenBackground(colors)) {
         // Save stays pinned to the bottom (above the keyboard); everything else scrolls.
         val scroll = rememberScrollState()
         Column(Modifier.fillMaxSize().systemBarsPadding().imePadding()) {
